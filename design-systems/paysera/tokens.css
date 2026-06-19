@@ -1,0 +1,578 @@
+/**
+ * Paysera Semantic Color Tokens
+ *
+ * Translated from the Paysera cc-design-system (lib-paysera-ui), generated
+ * from Light.tokens.json + Dark.tokens.json.
+ *
+ * Two-level CSS variable system:
+ * 1. Base Palette  - named colors from Figma (--blue-500, --gray-100, ...)
+ * 2. Semantic Tokens - role-based design tokens
+ *    (--surface-action-primary-initial, --text-neutral-primary-initial, ...)
+ *
+ * Semantic tokens reference base palette colors so theme switching only
+ * remaps the semantic layer under [data-theme="dark"]. The base palette is
+ * unchanged across themes.
+ *
+ * Token pattern: {category}-{role}-{variant}-{state}
+ *   category : background | border | focus-outline | icon | surface | text
+ *   role     : action | critical | info | inversed | neutral | success | warning
+ *   variant  : primary | secondary | tertiary
+ *   state    : initial | hover | pressed | disabled | visited
+ *
+ * Usage:
+ *   Light theme (default): <html> or <body>
+ *   Dark theme: <html data-theme="dark"> or <body data-theme="dark">
+ */
+
+:root {
+    /* ========================================
+     * LEVEL 1: Base Color Palette from Figma
+     * ======================================== */
+
+    /* Paysera brand mark — hero moments / logotype only, NOT default actions */
+    --paysera-blue: #000099;
+
+    /* Blue (action / info) */
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #d0e2ff;
+    --blue-300: #a6c8ff;
+    --blue-400: #78a9ff;
+    --blue-500: #4589ff;
+    --blue-600: #0f62fe;
+    --blue-700: #0043ce;
+    --blue-800: #002d9c;
+    --blue-900: #001d6c;
+    --blue-950: #162456;
+
+    /* Gray (neutral structure on light) */
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+
+    /* Green (success) */
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-300: #86efac;
+    --green-500: #33cc66;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --green-800: #166534;
+    --green-900: #14532d;
+    --green-950: #052e16;
+
+    /* Indigo (visited links) */
+    --indigo-600: #4f46e5;
+
+    /* Orange (warning surfaces / secondary) */
+    --orange-50: #fff7ed;
+    --orange-100: #ffedd5;
+    --orange-200: #fed7aa;
+    --orange-300: #fdba74;
+    --orange-700: #c2410c;
+    --orange-800: #9a3412;
+    --orange-900: #7c2d12;
+    --orange-950: #431407;
+
+    /* Red (critical) */
+    --red-50: #fef2f2;
+    --red-100: #fee2e2;
+    --red-200: #fecaca;
+    --red-300: #fca5a5;
+    --red-400: #f87171;
+    --red-500: #ef4444;
+    --red-600: #dc2626;
+    --red-700: #b91c1c;
+    --red-800: #991b1b;
+    --red-900: #7f1d1d;
+    --red-950: #450a0a;
+
+    /* Slate (neutral structure on dark) */
+    --slate-50: #f8fafc;
+    --slate-200: #e2e8f0;
+    --slate-500: #64748b;
+    --slate-600: #475569;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --slate-950: #020617;
+
+    /* White */
+    --white: #ffffff;
+
+    /* Yellow (warning primary / text) */
+    --yellow-400: #facc15;
+    --yellow-500: #eab308;
+    --yellow-600: #ca8a04;
+    --yellow-700: #a16207;
+    --yellow-800: #854d0e;
+
+    /* Transparent / overlay */
+    --white-alpha-0: #ffffff00;
+    --white-alpha-15: #ffffff26;
+    --white-alpha-50: #ffffff80;
+    --overlay-dark: #0011414d;
+
+    /* ========================================
+     * Typography, spacing, radius, elevation
+     * ======================================== */
+
+    --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    --font-mono: "PT Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+    --space-0: 0;
+    --space-1: 0.25rem;   /* 4px  */
+    --space-2: 0.5rem;    /* 8px  */
+    --space-3: 0.75rem;   /* 12px */
+    --space-4: 1rem;      /* 16px */
+    --space-5: 1.25rem;   /* 20px */
+    --space-6: 1.5rem;    /* 24px */
+    --space-8: 2rem;      /* 32px */
+    --space-10: 2.5rem;   /* 40px */
+    --space-12: 3rem;     /* 48px */
+    --space-16: 4rem;     /* 64px */
+
+    --radius-sm: 0.125rem;   /* 2px  */
+    --radius-default: 0.25rem; /* 4px — button/input/badge */
+    --radius-md: 0.375rem;   /* 6px  */
+    --radius-lg: 0.5rem;     /* 8px — form cards, modals */
+    --radius-xl: 0.75rem;    /* 12px — dashboard tiles */
+    --radius-full: 9999px;   /* pills / chips */
+
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-default: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+    --transition-fast: 100ms cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-base: 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    --transition-slow: 300ms cubic-bezier(0.23, 1, 0.32, 1);
+
+    /* ========================================
+     * LEVEL 2: Semantic Tokens (Light Theme)
+     * Reference base palette colors
+     * ======================================== */
+
+    /* Background tokens */
+    --background-neutral-primary-initial: var(--white);
+    --background-neutral-secondary-initial: var(--gray-100);
+    --background-neutral-tertiary-initial: var(--overlay-dark);
+
+    /* Border tokens */
+    --border-action-primary-disabled: var(--gray-200);
+    --border-action-primary-hover: var(--blue-500);
+    --border-action-primary-initial: var(--blue-600);
+    --border-action-primary-pressed: var(--blue-700);
+    --border-action-secondary-disabled: var(--gray-200);
+    --border-action-secondary-hover: var(--gray-400);
+    --border-action-secondary-initial: var(--gray-300);
+    --border-action-secondary-pressed: var(--gray-500);
+    --border-action-tertiary-disabled: var(--gray-50);
+    --border-action-tertiary-hover: var(--gray-200);
+    --border-action-tertiary-initial: var(--gray-100);
+    --border-action-tertiary-pressed: var(--gray-100);
+    --border-critical-primary-disabled: var(--gray-200);
+    --border-critical-primary-hover: var(--red-500);
+    --border-critical-primary-initial: var(--red-600);
+    --border-critical-primary-pressed: var(--red-700);
+    --border-critical-secondary-disabled: var(--gray-200);
+    --border-critical-secondary-hover: var(--red-100);
+    --border-critical-secondary-initial: var(--red-50);
+    --border-critical-secondary-pressed: var(--red-200);
+    --border-info-primary-disabled: var(--gray-200);
+    --border-info-primary-hover: var(--blue-500);
+    --border-info-primary-initial: var(--blue-600);
+    --border-info-primary-pressed: var(--blue-700);
+    --border-info-secondary-disabled: var(--gray-200);
+    --border-info-secondary-hover: var(--blue-100);
+    --border-info-secondary-initial: var(--blue-50);
+    --border-info-secondary-pressed: var(--blue-200);
+    --border-inversed-primary-disabled: var(--white-alpha-15);
+    --border-inversed-primary-initial: var(--white);
+    --border-inversed-secondary-color: var(--white-alpha-15);
+    --border-inversed-secondary-initial: var(--white-alpha-50);
+    --border-neutral-primary-disabled: var(--gray-200);
+    --border-neutral-primary-initial: var(--gray-300);
+    --border-neutral-secondary-disabled: var(--gray-50);
+    --border-neutral-secondary-initial: var(--gray-100);
+    --border-success-primary-disabled: var(--gray-200);
+    --border-success-primary-hover: var(--green-600);
+    --border-success-primary-initial: var(--green-700);
+    --border-success-primary-pressed: var(--green-800);
+    --border-success-secondary-disabled: var(--gray-200);
+    --border-success-secondary-hover: var(--green-100);
+    --border-success-secondary-initial: var(--green-50);
+    --border-success-secondary-pressed: var(--green-200);
+    --border-warning-primary-disabled: var(--gray-200);
+    --border-warning-primary-hover: var(--yellow-500);
+    --border-warning-primary-initial: var(--yellow-600);
+    --border-warning-primary-pressed: var(--yellow-700);
+    --border-warning-secondary-disabled: var(--gray-200);
+    --border-warning-secondary-hover: var(--orange-100);
+    --border-warning-secondary-initial: var(--orange-50);
+    --border-warning-secondary-pressed: var(--orange-200);
+
+    /* Focus-outline tokens */
+    --focus-outline-neutral-primary-initial: var(--blue-600);
+
+    /* Icon tokens */
+    --icon-action-primary-disabled: var(--gray-200);
+    --icon-action-primary-hover: var(--blue-500);
+    --icon-action-primary-initial: var(--blue-600);
+    --icon-action-primary-pressed: var(--blue-700);
+    --icon-action-secondary-disabled: var(--gray-200);
+    --icon-action-secondary-hover: var(--slate-900);
+    --icon-action-secondary-initial: var(--slate-950);
+    --icon-action-secondary-pressed: var(--slate-800);
+    --icon-critical-primary-disabled: var(--gray-200);
+    --icon-critical-primary-hover: var(--red-500);
+    --icon-critical-primary-initial: var(--red-600);
+    --icon-critical-primary-pressed: var(--red-700);
+    --icon-critical-secondary-disabled: var(--gray-200);
+    --icon-critical-secondary-hover: var(--red-100);
+    --icon-critical-secondary-initial: var(--red-50);
+    --icon-critical-secondary-pressed: var(--red-200);
+    --icon-info-primary-disabled: var(--gray-200);
+    --icon-info-primary-hover: var(--blue-500);
+    --icon-info-primary-initial: var(--blue-600);
+    --icon-info-primary-pressed: var(--blue-700);
+    --icon-info-secondary-disabled: var(--gray-200);
+    --icon-info-secondary-hover: var(--blue-100);
+    --icon-info-secondary-initial: var(--blue-50);
+    --icon-info-secondary-pressed: var(--blue-200);
+    --icon-inversed-primary-disabled: var(--white-alpha-15);
+    --icon-inversed-primary-initial: var(--white);
+    --icon-inversed-secondary-disabled: var(--white-alpha-15);
+    --icon-inversed-secondary-initial: var(--white-alpha-50);
+    --icon-neutral-primary-disabled: var(--gray-200);
+    --icon-neutral-primary-initial: var(--slate-950);
+    --icon-neutral-secondary-disabled: var(--gray-200);
+    --icon-neutral-secondary-initial: var(--gray-500);
+    --icon-neutral-tertiary-disabled: var(--slate-200);
+    --icon-neutral-tertiary-initial: var(--gray-300);
+    --icon-success-primary-disabled: var(--gray-200);
+    --icon-success-primary-hover: var(--green-600);
+    --icon-success-primary-initial: var(--green-700);
+    --icon-success-primary-pressed: var(--green-700);
+    --icon-success-secondary-disabled: var(--gray-200);
+    --icon-success-secondary-hover: var(--green-100);
+    --icon-success-secondary-initial: var(--green-50);
+    --icon-success-secondary-pressed: var(--green-200);
+    --icon-warning-primary-disabled: var(--gray-200);
+    --icon-warning-primary-hover: var(--yellow-600);
+    --icon-warning-primary-initial: var(--yellow-700);
+    --icon-warning-primary-pressed: var(--yellow-800);
+    --icon-warning-secondary-disabled: var(--gray-200);
+    --icon-warning-secondary-hover: var(--orange-100);
+    --icon-warning-secondary-initial: var(--orange-50);
+    --icon-warning-secondary-pressed: var(--orange-200);
+
+    /* Surface tokens */
+    --surface-action-primary-disabled: var(--gray-200);
+    --surface-action-primary-hover: var(--blue-500);
+    --surface-action-primary-initial: var(--blue-600);
+    --surface-action-primary-pressed: var(--blue-700);
+    --surface-action-secondary-disabled: var(--gray-200);
+    --surface-action-secondary-hover: var(--blue-50);
+    --surface-action-secondary-initial: var(--white-alpha-0);
+    --surface-action-secondary-pressed: var(--blue-100);
+    --surface-action-tertiary-disabled: var(--gray-200);
+    --surface-action-tertiary-hover: var(--slate-900);
+    --surface-action-tertiary-initial: var(--slate-950);
+    --surface-action-tertiary-pressed: var(--slate-800);
+    --surface-critical-primary-disabled: var(--gray-200);
+    --surface-critical-primary-hover: var(--red-500);
+    --surface-critical-primary-initial: var(--red-600);
+    --surface-critical-primary-pressed: var(--red-700);
+    --surface-critical-secondary-disabled: var(--gray-200);
+    --surface-critical-secondary-hover: var(--red-50);
+    --surface-critical-secondary-initial: var(--red-50);
+    --surface-critical-secondary-pressed: var(--red-100);
+    --surface-info-primary-disabled: var(--gray-200);
+    --surface-info-primary-hover: var(--blue-500);
+    --surface-info-primary-initial: var(--blue-600);
+    --surface-info-primary-pressed: var(--blue-700);
+    --surface-info-secondary-disabled: var(--gray-200);
+    --surface-info-secondary-hover: var(--blue-100);
+    --surface-info-secondary-initial: var(--blue-50);
+    --surface-info-secondary-pressed: var(--blue-200);
+    --surface-neutral-primary-disabled: var(--white);
+    --surface-neutral-primary-hover: var(--blue-100);
+    --surface-neutral-primary-initial: var(--white);
+    --surface-neutral-primary-pressed: var(--blue-100);
+    --surface-neutral-secondary-disabled: var(--gray-200);
+    --surface-neutral-secondary-hover: var(--gray-50);
+    --surface-neutral-secondary-initial: var(--gray-100);
+    --surface-neutral-secondary-pressed: var(--gray-200);
+    --surface-success-primary-disabled: var(--gray-200);
+    --surface-success-primary-hover: var(--green-500);
+    --surface-success-primary-initial: var(--green-600);
+    --surface-success-primary-pressed: var(--green-700);
+    --surface-success-secondary-disabled: var(--gray-200);
+    --surface-success-secondary-hover: var(--green-100);
+    --surface-success-secondary-initial: var(--green-50);
+    --surface-success-secondary-pressed: var(--green-200);
+    --surface-warning-primary-disabled: var(--gray-200);
+    --surface-warning-primary-hover: var(--yellow-400);
+    --surface-warning-primary-initial: var(--yellow-500);
+    --surface-warning-primary-pressed: var(--yellow-600);
+    --surface-warning-secondary-disabled: var(--gray-200);
+    --surface-warning-secondary-hover: var(--orange-100);
+    --surface-warning-secondary-initial: var(--orange-50);
+    --surface-warning-secondary-pressed: var(--orange-100);
+
+    /* Text tokens */
+    --text-action-primary-disabled: var(--gray-200);
+    --text-action-primary-hover: var(--blue-500);
+    --text-action-primary-initial: var(--blue-600);
+    --text-action-primary-pressed: var(--blue-700);
+    --text-action-primary-visited: var(--indigo-600);
+    --text-critical-primary-disabled: var(--gray-200);
+    --text-critical-primary-initial: var(--red-700); /* AA: 5.91:1 on red-50 subtle surface, 6.47:1 on white */
+    --text-critical-secondary-disabled: var(--gray-200);
+    --text-critical-secondary-initial: var(--red-300);
+    --text-info-primary-disabled: var(--gray-200);
+    --text-info-primary-initial: var(--blue-600);
+    --text-info-secondary-disabled: var(--gray-200);
+    --text-info-secondary-initial: var(--blue-300);
+    --text-inversed-primary-disabled: var(--white-alpha-15);
+    --text-inversed-primary-initial: var(--white);
+    --text-inversed-secondary-disabled: var(--white-alpha-15);
+    --text-inversed-secondary-initial: var(--white-alpha-50);
+    --text-neutral-primary-disabled: var(--gray-200);
+    --text-neutral-primary-initial: var(--gray-800);
+    --text-neutral-secondary-disabled: var(--gray-200);
+    --text-neutral-secondary-initial: var(--gray-500);
+    --text-neutral-tertiary-disabled: var(--gray-200);
+    --text-neutral-tertiary-initial: var(--gray-500); /* AA: gray-400 #9ca3af is only 2.54:1 on white; gray-500 is 4.83:1. gray-400 reserved for decorative/disabled non-text. */
+    --text-success-primary-disabled: var(--gray-200);
+    --text-success-primary-initial: var(--green-700);
+    --text-success-secondary-disabled: var(--gray-200);
+    --text-success-secondary-initial: var(--green-300);
+    --text-warning-primary-disabled: var(--gray-200);
+    --text-warning-primary-initial: var(--yellow-700);
+    --text-warning-secondary-disabled: var(--gray-200);
+    --text-warning-secondary-initial: var(--orange-300);
+}
+
+[data-theme="dark"] {
+    /* ========================================
+     * Dark Theme: Semantic Token Overrides
+     * Base palette remains unchanged
+     * ======================================== */
+
+    /* Background tokens */
+    --background-neutral-primary-initial: var(--slate-900);
+    --background-neutral-secondary-initial: var(--slate-900);
+    --background-neutral-tertiary-initial: var(--overlay-dark);
+
+    /* Border tokens */
+    --border-action-primary-disabled: var(--gray-800);
+    --border-action-primary-hover: var(--blue-500);
+    --border-action-primary-initial: var(--blue-700);
+    --border-action-primary-pressed: var(--blue-700);
+    --border-action-secondary-disabled: var(--gray-800);
+    --border-action-secondary-hover: var(--gray-400);
+    --border-action-secondary-initial: var(--gray-700);
+    --border-action-secondary-pressed: var(--slate-500);
+    --border-action-tertiary-disabled: var(--gray-800);
+    --border-action-tertiary-hover: var(--gray-600);
+    --border-action-tertiary-initial: var(--gray-700);
+    --border-action-tertiary-pressed: var(--gray-700);
+    --border-critical-primary-disabled: var(--gray-800);
+    --border-critical-primary-hover: var(--red-500);
+    --border-critical-primary-initial: var(--red-600);
+    --border-critical-primary-pressed: var(--red-700);
+    --border-critical-secondary-disabled: var(--gray-800);
+    --border-critical-secondary-hover: var(--red-800);
+    --border-critical-secondary-initial: var(--red-900);
+    --border-critical-secondary-pressed: var(--red-700);
+    --border-info-primary-disabled: var(--gray-800);
+    --border-info-primary-hover: var(--blue-500);
+    --border-info-primary-initial: var(--blue-600);
+    --border-info-primary-pressed: var(--blue-700);
+    --border-info-secondary-disabled: var(--gray-800);
+    --border-info-secondary-hover: var(--blue-800);
+    --border-info-secondary-initial: var(--blue-900);
+    --border-info-secondary-pressed: var(--blue-700);
+    --border-inversed-primary-disabled: var(--white-alpha-15);
+    --border-inversed-primary-initial: var(--white);
+    --border-inversed-secondary-color: var(--white-alpha-15);
+    --border-inversed-secondary-initial: var(--white-alpha-50);
+    --border-neutral-primary-disabled: var(--gray-800);
+    --border-neutral-primary-initial: var(--gray-700);
+    --border-neutral-secondary-disabled: var(--gray-800);
+    --border-neutral-secondary-initial: var(--gray-700);
+    --border-success-primary-disabled: var(--gray-800);
+    --border-success-primary-hover: var(--green-600);
+    --border-success-primary-initial: var(--green-700);
+    --border-success-primary-pressed: var(--green-800);
+    --border-success-secondary-disabled: var(--gray-800);
+    --border-success-secondary-hover: var(--green-800);
+    --border-success-secondary-initial: var(--green-900);
+    --border-success-secondary-pressed: var(--green-700);
+    --border-warning-primary-disabled: var(--gray-800);
+    --border-warning-primary-hover: var(--yellow-500);
+    --border-warning-primary-initial: var(--yellow-600);
+    --border-warning-primary-pressed: var(--yellow-700);
+    --border-warning-secondary-disabled: var(--gray-800);
+    --border-warning-secondary-hover: var(--orange-800);
+    --border-warning-secondary-initial: var(--orange-900);
+    --border-warning-secondary-pressed: var(--orange-700);
+
+    /* Focus-outline tokens */
+    --focus-outline-neutral-primary-initial: var(--blue-500);
+
+    /* Icon tokens */
+    --icon-action-primary-disabled: var(--gray-800);
+    --icon-action-primary-hover: var(--blue-400);
+    --icon-action-primary-initial: var(--blue-500);
+    --icon-action-primary-pressed: var(--blue-600);
+    --icon-action-secondary-disabled: var(--gray-800);
+    --icon-action-secondary-hover: var(--slate-500);
+    --icon-action-secondary-initial: var(--slate-600);
+    --icon-action-secondary-pressed: var(--slate-700);
+    --icon-critical-primary-disabled: var(--gray-800);
+    --icon-critical-primary-hover: var(--red-400);
+    --icon-critical-primary-initial: var(--red-500);
+    --icon-critical-primary-pressed: var(--red-600);
+    --icon-critical-secondary-disabled: var(--gray-800);
+    --icon-critical-secondary-hover: var(--red-900);
+    --icon-critical-secondary-initial: var(--red-950);
+    --icon-critical-secondary-pressed: var(--red-900);
+    --icon-info-primary-disabled: var(--gray-800);
+    --icon-info-primary-hover: var(--blue-400);
+    --icon-info-primary-initial: var(--blue-500);
+    --icon-info-primary-pressed: var(--blue-600);
+    --icon-info-secondary-disabled: var(--gray-800);
+    --icon-info-secondary-hover: var(--blue-900);
+    --icon-info-secondary-initial: var(--blue-950);
+    --icon-info-secondary-pressed: var(--blue-900);
+    --icon-inversed-primary-disabled: var(--white-alpha-15);
+    --icon-inversed-primary-initial: var(--white);
+    --icon-inversed-secondary-disabled: var(--white-alpha-15);
+    --icon-inversed-secondary-initial: var(--white-alpha-50);
+    --icon-neutral-primary-disabled: var(--gray-800);
+    --icon-neutral-primary-initial: var(--slate-50);
+    --icon-neutral-secondary-disabled: var(--gray-800);
+    --icon-neutral-secondary-initial: var(--gray-400);
+    --icon-neutral-tertiary-disabled: var(--gray-800);
+    --icon-neutral-tertiary-initial: var(--gray-400);
+    --icon-success-primary-disabled: var(--gray-800);
+    --icon-success-primary-hover: var(--green-500);
+    --icon-success-primary-initial: var(--green-600);
+    --icon-success-primary-pressed: var(--green-600);
+    --icon-success-secondary-disabled: var(--gray-800);
+    --icon-success-secondary-hover: var(--green-900);
+    --icon-success-secondary-initial: var(--green-950);
+    --icon-success-secondary-pressed: var(--green-900);
+    --icon-warning-primary-disabled: var(--gray-800);
+    --icon-warning-primary-hover: var(--yellow-500);
+    --icon-warning-primary-initial: var(--yellow-600);
+    --icon-warning-primary-pressed: var(--yellow-700);
+    --icon-warning-secondary-disabled: var(--gray-800);
+    --icon-warning-secondary-hover: var(--orange-950);
+    --icon-warning-secondary-initial: var(--orange-950);
+    --icon-warning-secondary-pressed: var(--orange-900);
+
+    /* Surface tokens */
+    --surface-action-primary-disabled: var(--gray-800);
+    --surface-action-primary-hover: var(--blue-500);
+    --surface-action-primary-initial: var(--blue-600);
+    --surface-action-primary-pressed: var(--blue-700);
+    --surface-action-secondary-disabled: var(--gray-800);
+    --surface-action-secondary-hover: var(--blue-950);
+    --surface-action-secondary-initial: var(--white-alpha-0);
+    --surface-action-secondary-pressed: var(--blue-950);
+    --surface-action-tertiary-disabled: var(--gray-800);
+    --surface-action-tertiary-hover: var(--slate-500);
+    --surface-action-tertiary-initial: var(--slate-600);
+    --surface-action-tertiary-pressed: var(--slate-700);
+    --surface-critical-primary-disabled: var(--gray-800);
+    --surface-critical-primary-hover: var(--red-500);
+    --surface-critical-primary-initial: var(--red-600);
+    --surface-critical-primary-pressed: var(--red-700);
+    --surface-critical-secondary-disabled: var(--gray-800);
+    --surface-critical-secondary-hover: var(--red-950);
+    --surface-critical-secondary-initial: var(--red-950);
+    --surface-critical-secondary-pressed: var(--red-900);
+    --surface-info-primary-disabled: var(--gray-800);
+    --surface-info-primary-hover: var(--blue-400);
+    --surface-info-primary-initial: var(--blue-500);
+    --surface-info-primary-pressed: var(--blue-600);
+    --surface-info-secondary-disabled: var(--gray-800);
+    --surface-info-secondary-hover: var(--blue-950);
+    --surface-info-secondary-initial: var(--blue-950);
+    --surface-info-secondary-pressed: var(--blue-950);
+    --surface-neutral-primary-disabled: var(--slate-800);
+    --surface-neutral-primary-hover: var(--blue-950);
+    --surface-neutral-primary-initial: var(--slate-800);
+    --surface-neutral-primary-pressed: var(--blue-950);
+    --surface-neutral-secondary-disabled: var(--slate-700);
+    --surface-neutral-secondary-hover: var(--gray-700);
+    --surface-neutral-secondary-initial: var(--slate-700);
+    --surface-neutral-secondary-pressed: var(--slate-700);
+    --surface-success-primary-disabled: var(--gray-800);
+    --surface-success-primary-hover: var(--green-500);
+    --surface-success-primary-initial: var(--green-600);
+    --surface-success-primary-pressed: var(--green-700);
+    --surface-success-secondary-disabled: var(--gray-800);
+    --surface-success-secondary-hover: var(--green-900);
+    --surface-success-secondary-initial: var(--green-950);
+    --surface-success-secondary-pressed: var(--green-900);
+    --surface-warning-primary-disabled: var(--gray-800);
+    --surface-warning-primary-hover: var(--yellow-400);
+    --surface-warning-primary-initial: var(--yellow-500);
+    --surface-warning-primary-pressed: var(--yellow-600);
+    --surface-warning-secondary-disabled: var(--gray-800);
+    --surface-warning-secondary-hover: var(--orange-900);
+    --surface-warning-secondary-initial: var(--orange-950);
+    --surface-warning-secondary-pressed: var(--orange-900);
+
+    /* Text tokens
+     * Fork-level deviation from the Paysera source dark block (intentional,
+     * WCAG-AA driven): the source keeps action/info/critical text at the
+     * -600/-700 steps, which fail AA on the dark CARD surface (slate-800).
+     * We shift them one step lighter (blue-400, red-400) and flip the
+     * *-secondary text tints to the LIGHT end of each ramp so they read on
+     * slate-800/slate-900. See DESIGN.md §Dark Mode for the contrast table. */
+    --text-action-primary-disabled: var(--gray-800);
+    --text-action-primary-hover: var(--blue-300);
+    --text-action-primary-initial: var(--blue-400);
+    --text-action-primary-pressed: var(--blue-700);
+    --text-action-primary-visited: var(--indigo-600);
+    --text-critical-primary-disabled: var(--gray-800);
+    --text-critical-primary-initial: var(--red-400);
+    --text-critical-secondary-disabled: var(--gray-800);
+    --text-critical-secondary-initial: var(--red-300);
+    --text-info-primary-disabled: var(--gray-800);
+    --text-info-primary-initial: var(--blue-400);
+    --text-info-secondary-disabled: var(--gray-800);
+    --text-info-secondary-initial: var(--blue-300);
+    --text-inversed-primary-disabled: var(--white-alpha-15);
+    --text-inversed-primary-initial: var(--white);
+    --text-inversed-secondary-disabled: var(--white-alpha-15);
+    --text-inversed-secondary-initial: var(--white-alpha-50);
+    --text-neutral-primary-disabled: var(--gray-800);
+    --text-neutral-primary-initial: var(--slate-50);
+    --text-neutral-secondary-disabled: var(--gray-800);
+    --text-neutral-secondary-initial: var(--gray-400);
+    --text-neutral-tertiary-disabled: var(--gray-800);
+    --text-neutral-tertiary-initial: var(--gray-400);
+    --text-success-primary-disabled: var(--gray-800);
+    --text-success-primary-initial: var(--green-500);
+    --text-success-secondary-disabled: var(--gray-800);
+    --text-success-secondary-initial: var(--green-300);
+    --text-warning-primary-disabled: var(--gray-800);
+    --text-warning-primary-initial: var(--yellow-500);
+    --text-warning-secondary-disabled: var(--gray-800);
+    --text-warning-secondary-initial: var(--orange-300);
+}
