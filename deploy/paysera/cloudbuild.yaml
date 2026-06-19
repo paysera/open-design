@@ -1,0 +1,53 @@
+# Cloud Build — Paysera Open Design custom image
+# ==============================================
+#
+# Builds deploy/paysera/Dockerfile with the build context set to the repo root
+# (the `.` build arg below) so the `COPY design-systems/paysera ...` step in the
+# Dockerfile can resolve the baked Paysera design system. Pushes the resulting
+# image to Artifact Registry.
+#
+# Target:  europe-west1-docker.pkg.dev/pt-ai-hub/open-design/od-paysera:${_TAG}
+# Repo:    open-design (Docker, europe-west1) in project pt-ai-hub
+#
+# Run from the repo root:
+#   gcloud builds submit \
+#     --project pt-ai-hub \
+#     --region europe-west1 \
+#     --config deploy/paysera/cloudbuild.yaml \
+#     .
+#
+# Override the tag:
+#   gcloud builds submit ... --substitutions=_TAG=v1.2.3 .
+
+substitutions:
+  # Image tag. Defaults to "latest"; override with --substitutions=_TAG=...
+  _TAG: latest
+  _IMAGE: europe-west1-docker.pkg.dev/pt-ai-hub/open-design/od-paysera
+
+steps:
+  # Build the custom image. Context is "." — the directory passed to
+  # `gcloud builds submit`, which must be the repo root so design-systems/paysera
+  # is in scope. -f points at the Paysera Dockerfile under deploy/paysera/.
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - --file
+      - deploy/paysera/Dockerfile
+      - --tag
+      - ${_IMAGE}:${_TAG}
+      - .
+
+  # Push the built image to Artifact Registry.
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_IMAGE}:${_TAG}
+
+# Declare the image so Cloud Build records it in the build results.
+images:
+  - ${_IMAGE}:${_TAG}
+
+options:
+  logging: CLOUD_LOGGING_ONLY

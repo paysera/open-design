@@ -1,0 +1,60 @@
+# ---------------------------------------------------------------------------
+# terraform.tfvars.example — Paysera Open Design single-instance GCP deployment
+#
+# Copy to terraform.tfvars and adjust only where your environment differs.
+# Every value here is also the default in variables.tf, so an empty
+# terraform.tfvars deploys the canonical Paysera configuration.
+#
+# Do NOT put the cloudflared connector token here. It is supplied out-of-band:
+#   gcloud secrets versions add open-design-cloudflared-token \
+#     --project pt-ai-hub --data-file=-      # paste token, Ctrl-D
+# ---------------------------------------------------------------------------
+
+# --- GCP placement -----------------------------------------------------------
+project_id = "pt-ai-hub"
+region     = "europe-west1"
+zone       = "europe-west1-b"
+
+# --- Networking --------------------------------------------------------------
+network_name = "open-design-net"
+subnet_name  = "open-design-subnet"
+subnet_cidr  = "10.10.0.0/28"
+# iap_source_range is Google-owned; leave at default (35.235.240.0/20).
+
+# --- Compute -----------------------------------------------------------------
+instance_name = "open-design"
+machine_type  = "e2-standard-2"
+# boot_image   = "projects/ubuntu-os-cloud/global/images/family/ubuntu-2404-lts-amd64"
+
+# --- Persistent data disk ----------------------------------------------------
+data_disk_name    = "open-design-data"
+data_disk_size_gb = 50
+
+# --- Container image ---------------------------------------------------------
+container_image = "europe-west1-docker.pkg.dev/pt-ai-hub/open-design/od-paysera:latest"
+artifact_registry_host = "europe-west1-docker.pkg.dev"
+artifact_registry_repo = "open-design"
+
+# --- Public ingress (Cloudflare) ---------------------------------------------
+public_hostname = "design.paysera.engineering"
+
+# --- Daemon runtime ----------------------------------------------------------
+daemon_port           = 7456
+host_data_dir         = "/opt/open-design/data"
+node_max_old_space_mb = 3072
+
+# --- Cloudflare tunnel secret ------------------------------------------------
+cloudflared_secret_name = "open-design-cloudflared-token"
+# Set false if the secret container is managed outside this Terraform (the
+# stack will then only read it for the IAM binding).
+manage_cloudflared_secret = true
+
+# --- Service account ---------------------------------------------------------
+service_account_id = "open-design-vm"
+
+# --- Labels ------------------------------------------------------------------
+labels = {
+  app        = "open-design"
+  team       = "paysera-tech"
+  managed-by = "terraform"
+}

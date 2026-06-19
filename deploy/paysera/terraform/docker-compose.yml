@@ -1,0 +1,157 @@
+# ---------------------------------------------------------------------------
+# docker-compose.yml — Paysera Open Design VM stack
+#
+# Rendered by Terraform via templatefile(). The following $${...} tokens are
+# Terraform template variables:
+#   ${container_image}        Artifact Registry image for the daemon
+#   ${daemon_port}            daemon port (7456)
+#   ${public_hostname}        Cloudflare-served hostname
+#   ${host_data_dir}          host path mounted into the container as /data
+#   ${node_max_old_space_mb}  Node heap cap
+#   ${anthropic_base_url}     Paysera litellm-proxy base URL (model gateway)
+#
+# Compose's own runtime interpolation (e.g. $${TUNNEL_TOKEN}) is escaped as
+# $${...} so Terraform leaves it for Compose to resolve from --env-file app.env.
+# The startup script materializes app.env from Secret Manager.
+#
+# Request path:
+#   user -> Cloudflare edge (TLS, ${public_hostname})
+#        -> cloudflared        (token connector, dials OUT to Cloudflare)
+#        -> oauth2-proxy:4180  (Google SSO gate, @paysera.net only)   <-- AUTH
+#        -> open-design:${daemon_port}  (daemon, OD_DISABLE_API_AUTH=1)
+#
+# In the Cloudflare tunnel UI the public hostname ${public_hostname} must be
+# routed to the service http://oauth2-proxy:4180 (NOT directly to the daemon),
+# so every request is authenticated before it reaches Open Design.
+# ---------------------------------------------------------------------------
+name: open-design
+
+services:
+  # -------------------------------------------------------------------------
+  # open-design — the Paysera daemon image.
+  # Auth is DISABLED at the daemon (OD_DISABLE_API_AUTH=1) because oauth2-proxy
+  # in front authenticates every request. The daemon is reachable ONLY on the
+  # internal compose network, never published to a host port.
+  # -------------------------------------------------------------------------
+  open-design:
+    container_name: open-design
+    image: ${container_image}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      # Node heap cap. e2-standard-2 has 8 GiB; 3 GiB is a safe cap for the daemon.
+      NODE_OPTIONS: --max-old-space-size=${node_max_old_space_mb}
+      OD_BIND_HOST: 0.0.0.0
+      OD_PORT: ${daemon_port}
+      # Single data-root truth source (root AGENTS.md "Daemon data directory
+      # contract"): the daemon resolves OD_DATA_DIR into RUNTIME_DATA_DIR and
+      # derives every daemon-owned path from it.
+      OD_DATA_DIR: /data
+      # Browser origin allowed to call /api — only the public Cloudflare host.
+      OD_ALLOWED_ORIGINS: https://${public_hostname}
+      # Auth enforced by oauth2-proxy in front; ONLY valid because nothing
+      # reaches the daemon except the authenticated proxy on the compose net.
+      OD_DISABLE_API_AUTH: "1"
+      # --- Model gateway (Paysera litellm-proxy, Anthropic-compatible) -------
+      # The daemon passes ANTHROPIC_BASE_URL / ANTHROPIC_AUTH_TOKEN through to
+      # the spawned `claude` CLI (apps/daemon/src/runtimes/env.ts allowlist), so
+      # Claude runs against the Paysera gateway -> Vertex Claude, with central
+      # billing/audit. The token is a litellm virtual key from app.env.
+      ANTHROPIC_BASE_URL: ${anthropic_base_url}
+      ANTHROPIC_AUTH_TOKEN: $${ANTHROPIC_AUTH_TOKEN}
+    volumes:
+      # Persistent daemon data on the dedicated disk. The host dir is chowned to
+      # uid 1001 by the startup script so the container's open-design user writes.
+      - ${host_data_dir}:/data
+    expose:
+      - "${daemon_port}"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:${daemon_port}/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # -------------------------------------------------------------------------
+  # oauth2-proxy — Google Workspace SSO gate (restricted to @paysera.net).
+  # Cloudflare Access is not configured for this zone, so SSO is enforced here,
+  # on the VM, independent of Cloudflare Access and GCP IAP. It forwards the
+  # authenticated user's email as X-Auth-Request-Email / X-Forwarded-Email,
+  # which the phase-2 ownership RBAC will consume as the identity header.
+  # -------------------------------------------------------------------------
+  oauth2-proxy:
+    container_name: oauth2-proxy
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.6.0
+    restart: unless-stopped
+    command:
+      - --http-address=0.0.0.0:4180
+      - --upstream=http://open-design:${daemon_port}
+      - --provider=google
+      - --email-domain=paysera.net
+      - --redirect-url=https://${public_hostname}/oauth2/callback
+      - --cookie-secure=true
+      - --cookie-domain=${public_hostname}
+      - --whitelist-domain=${public_hostname}
+      - --reverse-proxy=true
+      - --skip-provider-button=true
+      - --set-xauthrequest=true
+      - --pass-user-headers=true
+      - --pass-access-token=false
+      # SSE: Open Design streams run events over text/event-stream. Flush
+      # promptly so streamed chunks are not buffered by the proxy.
+      - --flush-interval=100ms
+    environment:
+      # From app.env (Secret Manager). Compose-level interpolation — $$ escapes
+      # the Terraform templatefile pass so Compose resolves these at runtime.
+      OAUTH2_PROXY_CLIENT_ID: $${OAUTH2_PROXY_CLIENT_ID}
+      OAUTH2_PROXY_CLIENT_SECRET: $${OAUTH2_PROXY_CLIENT_SECRET}
+      OAUTH2_PROXY_COOKIE_SECRET: $${OAUTH2_PROXY_COOKIE_SECRET}
+    expose:
+      - "4180"
+    depends_on:
+      open-design:
+        condition: service_healthy
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # -------------------------------------------------------------------------
+  # cloudflared — Cloudflare tunnel connector. Dials OUT to Cloudflare and
+  # forwards the public hostname to http://oauth2-proxy:4180 (set in the
+  # tunnel UI). Token-based (remotely-managed) tunnel: ingress route lives on
+  # the Cloudflare side, so the connector only needs the token.
+  # -------------------------------------------------------------------------
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: $${TUNNEL_TOKEN}
+    depends_on:
+      oauth2-proxy:
+        condition: service_started
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"

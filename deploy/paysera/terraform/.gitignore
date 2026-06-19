@@ -1,0 +1,16 @@
+# Terraform local state and provider plugins — never commit
+.terraform/
+.terraform.tfstate.lock.info
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# tfvars may carry environment specifics; keep only the example
+*.tfvars
+!terraform.tfvars.example
+
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
