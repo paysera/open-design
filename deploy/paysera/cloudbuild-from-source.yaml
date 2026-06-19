@@ -1,0 +1,22 @@
+# Build the Open Design base from source (deploy/Dockerfile bakes daemon + web +
+# design-systems incl. paysera), then layer the Paysera Dockerfile (claude CLI)
+# on top of that local base, and push only the final image.
+substitutions:
+  _IMAGE: europe-west1-docker.pkg.dev/pt-ai-hub/open-design/od-paysera
+  _TAG: latest
+steps:
+  - id: base
+    name: gcr.io/cloud-builders/docker
+    args: ['build', '-f', 'deploy/Dockerfile', '-t', 'od-base:local', '.']
+  - id: paysera-layer
+    name: gcr.io/cloud-builders/docker
+    args: ['build', '-f', 'deploy/paysera/Dockerfile', '--build-arg', 'BASE_IMAGE=od-base:local', '-t', '${_IMAGE}:${_TAG}', '.']
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: ['push', '${_IMAGE}:${_TAG}']
+images:
+  - '${_IMAGE}:${_TAG}'
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: E2_HIGHCPU_8
+timeout: 2400s

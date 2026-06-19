@@ -20,7 +20,12 @@
 # Build context MUST be the repo root (see cloudbuild.yaml) so the
 # `COPY design-systems/paysera ...` step can find the baked design system.
 
-FROM ghcr.io/nexu-io/od:latest
+# Base Open Design runtime image. Defaults to the upstream published image, but
+# is overridable so a self-built base (e.g. od-base:latest produced from this
+# repo's deploy/Dockerfile in the same Cloud Build run) can be layered on when
+# the upstream GHCR image is not pullable from the build environment.
+ARG BASE_IMAGE=ghcr.io/nexu-io/od:latest
+FROM ${BASE_IMAGE}
 
 # ---------------------------------------------------------------------------
 # Root layer: system deps + global CLI install.

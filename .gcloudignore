@@ -1,0 +1,30 @@
+# Cloud Build context trim. NOTE: presence of this file makes gcloud ignore
+# .gitignore, so node_modules etc. are listed explicitly. Root-level trims are
+# ANCHORED with a leading "/" so nested dirs of the same name (e.g.
+# packages/contracts/src/plugins) are NOT excluded.
+.git/
+**/node_modules/
+**/.terraform/
+.tmp/
+*.log
+
+# Heavy ROOT dirs not needed to build the daemon + web (see deploy/Dockerfile)
+/design-templates/
+/docs/
+/data/
+/mocks/
+/story/
+/templates/
+/specs/
+/.github/
+/.vaunt/
+/charts/
+/nix/
+
+# Keep only ROOT plugins/_official (the only plugins path the build COPYs)
+/plugins/*
+!/plugins/_official
+
+# Keep only e2e/package.json (referenced by the build)
+/e2e/*
+!/e2e/package.json
