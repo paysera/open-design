@@ -64,11 +64,14 @@ services:
       # several other bare names are NOT routed by this gateway; only
       # claude-opus-4-6 and claude-haiku-4-5 resolve. These envs override every
       # Claude Code model tier so "default" runs work without a per-user pick.
-      ANTHROPIC_MODEL: claude-opus-4-6
-      ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4-6
-      ANTHROPIC_DEFAULT_SONNET_MODEL: claude-opus-4-6
-      ANTHROPIC_DEFAULT_HAIKU_MODEL: claude-haiku-4-5
-      ANTHROPIC_SMALL_FAST_MODEL: claude-haiku-4-5
+      # The Paysera litellm gateway routes Claude to Vertex only under the
+      # vertex_ai/ prefixed model_names; the bare names (claude-opus-4-8) still
+      # hit a disabled direct-Anthropic route. Use the vertex_ai/ names.
+      ANTHROPIC_MODEL: vertex_ai/claude-opus-4-8
+      ANTHROPIC_DEFAULT_OPUS_MODEL: vertex_ai/claude-opus-4-8
+      ANTHROPIC_DEFAULT_SONNET_MODEL: vertex_ai/claude-sonnet-4-6
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: vertex_ai/claude-haiku-4-5
+      ANTHROPIC_SMALL_FAST_MODEL: vertex_ai/claude-haiku-4-5
       # GitHub read-only token for the github-design-context connector (private
       # repos like paysera/cc-design-system). gh reads GH_TOKEN; the baked git
       # credential helper injects it for git clone too. From app.env (secret).
