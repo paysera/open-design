@@ -74,6 +74,13 @@ RUN printf '#!/bin/sh\n[ "$1" = "get" ] || exit 0\necho username=x-access-token\
 # and is owned by the runtime user. Source path is relative to the repo-root
 # build context.
 # ---------------------------------------------------------------------------
+# The base image creates the open-design user with `adduser -H` (no home dir),
+# so $HOME (/home/open-design) does not exist and is not writable. Claude Code
+# writes ~/.claude on shell init; a missing/unwritable HOME makes every Bash
+# tool call fail with a "home directory permission issue". Create it, owned by
+# the runtime user.
+RUN mkdir -p /home/open-design && chown open-design:open-design /home/open-design
+
 COPY --chown=open-design:open-design design-systems/paysera /app/design-systems/paysera
 
 # ---------------------------------------------------------------------------
