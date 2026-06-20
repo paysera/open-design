@@ -44,11 +44,18 @@ ARG CLAUDE_CODE_VERSION=2.1.183
 #   these shims they fail to load on musl with "Error loading shared library".
 # - git: the CLI shells out to git for repo awareness; the slim base does not
 #   include it.
+# - bash: Claude Code's Bash tool requires a real POSIX shell. The slim Alpine
+#   base only ships busybox `sh`; without bash + a SHELL env, every Bash tool
+#   call fails with "No suitable shell found. Claude CLI requires a Posix shell
+#   environment." This breaks connectors and any agent shell step.
 # Then install the CLI globally and clean the npm cache to keep the layer lean.
-RUN apk add --no-cache libc6-compat gcompat git \
+RUN apk add --no-cache libc6-compat gcompat git bash \
     && npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}" \
     && npm cache clean --force \
     && claude --version
+
+# Claude Code's Bash tool resolves the shell from $SHELL; point it at bash.
+ENV SHELL=/bin/bash
 
 # ---------------------------------------------------------------------------
 # Bake the Paysera design system into the built-in catalogue.
