@@ -28,6 +28,7 @@ forked; legacy ids removed). Default design system = built-in **`paysera`**
 - **Claude:** the gateway routes Claude to Vertex **only under `vertex_ai/…` names**; the bare `claude-opus-4-8` still hits a disabled direct-Anthropic route (400). Always use the `vertex_ai/` prefix.
 - **Codex:** litellm serves `/v1/responses` (not `/v1/chat/completions` for codex ≥0.141). Config in `/home/open-design/.codex/config.toml` (provider `paysera-gateway`, `wire_api=responses`).
 - **Gemini:** the gemini CLI can't take an OpenAI base URL, so it talks to Google directly with `GEMINI_API_KEY`. This **bypasses the central litellm gateway** (no central billing/audit for Gemini). Gemini models are *also* reachable via the gateway (`vertex_ai/gemini-3.5-flash` etc.) if a gateway-routed path is ever preferred.
+- **Live artifact:** `GET /api/live-artifacts/:id/preview` and `POST .../refresh` are loopback-only upstream (desktop-app design); behind our proxy the daemon never sees a loopback peer/host/origin, so they 403'd. Relaxed in `routes/live-artifact.ts` to pass when `OD_DISABLE_API_AUTH=1` (trusted proxy). Sensitive loopback-only endpoints (daemon shutdown, db vacuum, connector OAuth) deliberately stay strict — verified still 403 from a non-loopback peer.
 
 ## Gateway (shared — not ours to freely change)
 
