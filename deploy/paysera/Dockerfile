@@ -49,13 +49,23 @@ ARG CLAUDE_CODE_VERSION=2.1.183
 #   call fails with "No suitable shell found. Claude CLI requires a Posix shell
 #   environment." This breaks connectors and any agent shell step.
 # Then install the CLI globally and clean the npm cache to keep the layer lean.
-RUN apk add --no-cache libc6-compat gcompat git bash \
+RUN apk add --no-cache libc6-compat gcompat git bash github-cli \
     && npm install -g "@anthropic-ai/claude-code@${CLAUDE_CODE_VERSION}" \
     && npm cache clean --force \
-    && claude --version
+    && claude --version \
+    && gh --version | head -1
 
 # Claude Code's Bash tool resolves the shell from $SHELL; point it at bash.
 ENV SHELL=/bin/bash
+
+# GitHub connector (`od tools connectors github-design-context`) clones repos
+# via git/gh. For PRIVATE repos (e.g. paysera/cc-design-system) it needs auth.
+# Install a git credential helper that injects the runtime $GH_TOKEN, so both
+# `git clone` and `gh` authenticate when GH_TOKEN is present in the container
+# env. No token is baked into the image; it is supplied at runtime via secret.
+RUN printf '#!/bin/sh\n[ "$1" = "get" ] || exit 0\necho username=x-access-token\necho "password=$GH_TOKEN"\n' > /usr/local/bin/gh-credential-helper \
+    && chmod +x /usr/local/bin/gh-credential-helper \
+    && git config --system credential."https://github.com".helper /usr/local/bin/gh-credential-helper
 
 # ---------------------------------------------------------------------------
 # Bake the Paysera design system into the built-in catalogue.

@@ -284,6 +284,7 @@ locals {
     oauth_client_secret = var.oauth_client_secret_secret_name
     oauth_cookie_secret = var.oauth_cookie_secret_name
     litellm_key         = var.litellm_key_secret_name
+    github_token        = var.github_token_secret_name
   }
 }
 
@@ -337,6 +338,7 @@ locals {
     oauth_client_secret_secret_name = var.oauth_client_secret_secret_name
     oauth_cookie_secret_name        = var.oauth_cookie_secret_name
     litellm_key_secret_name         = var.litellm_key_secret_name
+    github_token_secret_name        = var.github_token_secret_name
     data_disk_device_name           = var.data_disk_device_name
     host_data_dir                   = var.host_data_dir
     project_id                      = var.project_id

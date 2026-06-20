@@ -149,6 +149,8 @@ fetch_secret() {
 
 # Model gateway virtual key -> open-design (ANTHROPIC_AUTH_TOKEN).
 fetch_secret ANTHROPIC_AUTH_TOKEN "${litellm_key_secret_name}"
+# GitHub read-only token -> github-design-context connector (private repos).
+fetch_secret GH_TOKEN "${github_token_secret_name}"
 # Google SSO -> oauth2-proxy.
 fetch_secret OAUTH2_PROXY_CLIENT_ID "${oauth_client_id_secret_name}"
 fetch_secret OAUTH2_PROXY_CLIENT_SECRET "${oauth_client_secret_secret_name}"

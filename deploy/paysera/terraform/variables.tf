@@ -233,6 +233,12 @@ variable "litellm_key_secret_name" {
   default     = "open-design-litellm-key"
 }
 
+variable "github_token_secret_name" {
+  description = "Secret Manager secret ID for the GitHub read-only token used by the github-design-context connector (private repos)."
+  type        = string
+  default     = "open-design-github-token"
+}
+
 # --- Service account ---------------------------------------------------------
 
 variable "service_account_id" {
