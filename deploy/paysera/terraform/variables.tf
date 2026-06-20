@@ -239,6 +239,12 @@ variable "github_token_secret_name" {
   default     = "open-design-github-token"
 }
 
+variable "gemini_key_secret_name" {
+  description = "Secret Manager secret ID for the Gemini (AI Studio) API key used by the gemini CLI agent (direct Google API, not via the litellm gateway)."
+  type        = string
+  default     = "open-design-gemini-key"
+}
+
 # --- Service account ---------------------------------------------------------
 
 variable "service_account_id" {

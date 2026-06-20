@@ -84,6 +84,8 @@ services:
       OPENAI_BASE_URL: ${anthropic_base_url}/v1
       OPENAI_API_KEY: $${ANTHROPIC_AUTH_TOKEN}
       OD_CODEX_SANDBOX: danger-full-access
+      # Gemini CLI (Google AI Studio key, direct to Google — not via the gateway).
+      GEMINI_API_KEY: $${GEMINI_API_KEY}
     volumes:
       # Persistent daemon data on the dedicated disk. The host dir is chowned to
       # uid 1001 by the startup script so the container's open-design user writes.

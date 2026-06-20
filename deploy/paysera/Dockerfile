@@ -92,6 +92,11 @@ RUN mkdir -p /home/open-design/.codex && \
     printf 'model = "gpt-5.5"\nmodel_provider = "paysera-gateway"\n\n[model_providers.paysera-gateway]\nname = "Paysera litellm gateway"\nbase_url = "https://litellm-proxy-3qgmggattq-ew.a.run.app/v1"\nenv_key = "OPENAI_API_KEY"\nwire_api = "responses"\n' > /home/open-design/.codex/config.toml && \
     chown -R open-design:open-design /home/open-design/.codex
 
+# Gemini CLI (Google). The litellm gateway cannot front the gemini CLI (it has
+# no OpenAI-style base URL), so this agent talks to Google's Generative Language
+# API directly using GEMINI_API_KEY (AI Studio), injected at runtime via env.
+RUN npm install -g @google/gemini-cli && npm cache clean --force && gemini --version 2>&1 | head -1
+
 COPY --chown=open-design:open-design design-systems/paysera /app/design-systems/paysera
 
 # ---------------------------------------------------------------------------
