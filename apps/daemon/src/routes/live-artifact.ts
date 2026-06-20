@@ -1,5 +1,6 @@
 import type { Express } from 'express';
 import type { RouteDeps } from '../server-context.js';
+import { isApiAuthDisabled } from '../api-token-auth.js';
 
 export interface RegisterLiveArtifactRoutesDeps extends RouteDeps<'db' | 'http' | 'paths' | 'auth' | 'liveArtifacts' | 'projectStore'> {}
 
@@ -10,6 +11,18 @@ export function registerLiveArtifactRoutes(app: Express, ctx: RegisterLiveArtifa
   const { authorizeToolRequest, requestProjectOverride, requestRunOverride } = ctx.auth;
   const { createLiveArtifact, listLiveArtifacts, updateLiveArtifact, refreshLiveArtifact, emitLiveArtifactEvent, emitLiveArtifactRefreshEvent, readLiveArtifactCode, setLiveArtifactCodeHeaders, ensureLiveArtifactPreview, setLiveArtifactPreviewHeaders, getLiveArtifact, listLiveArtifactRefreshLogEntries, deleteLiveArtifact } = ctx.liveArtifacts;
   const { updateProject } = ctx.projectStore;
+
+  // The live-artifact preview/refresh endpoints are normally loopback-only
+  // (desktop app talking to its own daemon). In a trusted reverse-proxy
+  // deployment (OD_DISABLE_API_AUTH=1, e.g. behind oauth2-proxy + Cloudflare),
+  // the daemon never sees a loopback peer/host/origin, so that guard would 403
+  // the preview. Relax ONLY these two view endpoints behind the trusted proxy;
+  // the strict requireLocalDaemonRequest still guards sensitive endpoints
+  // (daemon shutdown, db vacuum, connector OAuth) elsewhere.
+  const previewGuard = isApiAuthDisabled()
+    ? ((_req: any, _res: any, next: any) => next())
+    : requireLocalDaemonRequest;
+
   app.get('/api/live-artifacts', async (req, res) => {
     try {
       const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
@@ -27,11 +40,11 @@ export function registerLiveArtifactRoutes(app: Express, ctx: RegisterLiveArtifa
     }
   });
 
-  app.options('/api/live-artifacts/:artifactId/preview', requireLocalDaemonRequest, (_req, res) => {
+  app.options('/api/live-artifacts/:artifactId/preview', previewGuard, (_req, res) => {
     res.status(204).end();
   });
 
-  app.get('/api/live-artifacts/:artifactId/preview', requireLocalDaemonRequest, async (req, res) => {
+  app.get('/api/live-artifacts/:artifactId/preview', previewGuard, async (req, res) => {
     try {
       const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
       if (!projectId) {
@@ -276,7 +289,7 @@ export function registerLiveArtifactRoutes(app: Express, ctx: RegisterLiveArtifa
     res.status(204).end();
   });
 
-  app.post('/api/live-artifacts/:artifactId/refresh', requireLocalDaemonRequest, async (req, res) => {
+  app.post('/api/live-artifacts/:artifactId/refresh', previewGuard, async (req, res) => {
     try {
       const projectId = typeof req.query.projectId === 'string' ? req.query.projectId : undefined;
       if (!projectId) {
