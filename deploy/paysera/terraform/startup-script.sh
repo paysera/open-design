@@ -185,4 +185,16 @@ for _ in $(seq 1 40); do
   sleep 3
 done
 
+# --- 8. Route the OpenAI media provider (image + TTS voice) through litellm ---
+# The media openai provider reads its base URL ONLY from media-config.json (not
+# from OPENAI_BASE_URL env), so without this it defaults to api.openai.com and
+# rejects the litellm virtual key. Write it once (idempotent — never clobber a
+# later Settings-UI edit). The API key still comes from OPENAI_API_KEY env.
+MEDIA_CFG="${host_data_dir}/media-config.json"
+if [ ! -f "$${MEDIA_CFG}" ]; then
+  log "Writing media-config.json (route openai media provider via litellm)"
+  printf '%s' '{"providers":{"openai":{"baseUrl":"https://litellm-proxy-3qgmggattq-ew.a.run.app/v1"}}}' > "$${MEDIA_CFG}"
+  chown 1001:1001 "$${MEDIA_CFG}"
+fi
+
 log "Bootstrap complete"
