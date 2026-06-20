@@ -169,4 +169,18 @@ cd "$${APP_DIR}"
 docker compose --env-file "$${ENV_FILE}" pull
 docker compose --env-file "$${ENV_FILE}" up -d --remove-orphans
 
+# --- 7. Make the Paysera design system the instance default --------------
+# Idempotent + non-fatal: wait for the daemon, then set designSystemId so every
+# new project pre-selects the baked built-in "paysera" design system. Persists
+# in <OD_DATA_DIR>/app-config.json; re-applied on each boot so a fresh data disk
+# still gets the default without manual steps.
+log "Setting default design system (designSystemId=paysera)"
+for _ in $(seq 1 40); do
+  if docker exec open-design node /app/apps/daemon/dist/cli.js config set designSystemId paysera >/dev/null 2>&1; then
+    log "default design system set to paysera"
+    break
+  fi
+  sleep 3
+done
+
 log "Bootstrap complete"

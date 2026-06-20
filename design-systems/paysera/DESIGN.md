@@ -1,239 +1,340 @@
-# Paysera Design System
+# Paysera — Lithuanian fintech Design System
 
 > Category: Fintech & Crypto
-> European fintech UI. Action-blue on white, role-driven semantic tokens, flat-by-default elevation, light for customers and dark for ops.
+> Lithuanian fintech banking UI — action-blue (#0f62fe) on white, two-level semantic token system, Inter + PT Mono, trust-first regulated-product voice. Built from the official paysera/cc-design-system source.
+
+Paysera — Lithuanian fintech for payments, money transfers, business accounts, checkout, cards, and lending. Serves ~1M users across Banking (consumer + business), Checkout (merchant payments), and Lending. Surfaces: web dashboard, iOS, Android, in-store kiosks, merchant portal. Design system: Paysera UI (React + Tailwind, ~37 components). Voice is professional, clear, trust-first — a regulated financial product, not a consumer lifestyle app.
 
 ## 1. Visual Theme & Atmosphere
 
-Paysera is a **European payments and banking platform**, and its UI reads exactly like that: trustworthy, dense with real money, and allergic to decoration. The system is built on a two-level token model lifted straight from `lib-paysera-ui` — a base Figma palette (`--blue-600`, `--gray-300`, ...) feeds a semantic layer (`--surface-action-primary-initial`, `--text-neutral-primary-initial`, ...) so a single `[data-theme="dark"]` remap flips the entire product between customer-light and ops-dark without touching a component.
+Paysera's visual language is clean, institutional, and trust-first. The product UI uses generous white space, minimal decoration, and lets content — account balances, transaction lists, card details — take center stage. The palette is anchored by IBM-lineage action blue (`#0f62fe`, blue-600) for interactive elements, with a distinct brand navy (`#000099`) reserved for the wordmark and hero moments only. Backgrounds are white or very light gray — never warm, never patterned, never photographic.
 
-The defining contrast pair is **IBM-Carbon action blue (`#0f62fe`) on pure white (`#ffffff`)** with near-black slate text (`#1f2937`). This is not the playful purple of consumer fintech nor the neon of crypto exchanges — it is the calm, regulated blue of a licensed payment institution. Surfaces are **flat by default**: elevation is earned, not sprinkled. A dashboard tile gets one `--shadow-default`; it never stacks a second shadow tier on top.
+The feeling is: a European bank that built its own tech. Professional enough for business accounts and merchant checkout; modern enough that consumer users trust it with their daily payments. No playful illustrations, no lifestyle imagery, no startup energy. Solid, clear, functional.
 
-There is a sharp distinction between the **Paysera brand blue (`#000099`)** and the **action blue (`#0f62fe`)**. The brand blue is for the logotype and hero moments only — it never becomes a button background or a link color. Mixing the two is the single most common way to make Paysera output look wrong.
+Logo mark: three interlocking arcs in blue, navy (`#000099`), and green (`#33CC66`). The green arc only appears in the logomark — it does not leak into the product palette as a decorative color. It is reserved for success states.
 
-**Key Characteristics:**
-- Two-level tokens: base palette → semantic roles. Components reference roles, never raw hex.
-- Action blue `#0f62fe` for all interactive controls; Paysera blue `#000099` reserved for brand marks.
-- Flat by default — one elevation level per surface, no glassmorphism, no neumorphism, no faux-3D.
-- Conservative radii: 4px buttons/inputs/badges, 8px form cards, 12px dashboard tiles, full only for chips/pills.
-- Role-driven status color: success green, critical red, warning yellow/orange, info blue — never decorative.
-- Light theme for customer-facing web; dark theme (`[data-theme="dark"]`) for internal ops and data dashboards.
-- Inter for all UI, PT Mono for transaction IDs, IBANs, hashes, and tabular numeric data.
+> **Source evidence**: Token values from `tokens/colors.json` and `tokens/tokens.css` in `paysera/cc-design-system`. Design rules from `RULES.md`. Component API from `COMPONENT-NOTES.md`. See `context/github/` for extraction notes.
 
-### Use Cases
+## Source Context
 
-Paysera is purpose-built for:
-- **Customer banking and payments web** — account flows, transfers, currency conversion, onboarding (light theme).
-- **Internal operations consoles** — compliance review, transaction monitoring, merchant admin (dark theme).
-- **Data dashboards** — KPI strips, volume charts, settlement tables (dark theme).
-- **Forms with real consequences** — KYC, IBAN entry, beneficiary management, where a label is never a placeholder.
+This design system specification is grounded in the following source files from [`paysera/cc-design-system`](https://github.com/paysera/cc-design-system):
 
-### Prior Art
+| Source file | What it provides | Local snapshot |
+|-------------|-----------------|----------------|
+| `RULES.md` | Design do/don't rules, responsive breakpoints, status color mapping | `context/github/paysera-cc-design-system/files/RULES.md` |
+| `COMPONENT-NOTES.md` | Per-component design decisions from `*.theme.js` files | `context/github/paysera-cc-design-system/files/COMPONENT-NOTES.md` |
+| `SUB-BRANDS.md` | Paysera POS and Tickets sub-brand rules | `context/github/paysera-cc-design-system/files/SUB-BRANDS.md` |
+| `STACK.md` | Preview runtime, Tailwind config, 10 mandatory rules | `context/github/paysera-cc-design-system/files/STACK.md` |
+| `tokens/colors.json` | Base palette + semantic token schema | `context/github/paysera-cc-design-system/files/tokens-colors.json` |
+| `tokens/typography.json` | Font families, weights, type scale | `context/github/paysera-cc-design-system/files/tokens-typography.json` |
+| `tokens/spacing.json` | Spacing, radius, breakpoints, grid | `context/github/paysera-cc-design-system/files/tokens-spacing.json` |
+| `tokens/tokens.css` | Full two-level CSS variable system | `colors_and_type.css` (integrated) |
+| `preview/_shared.css` | Typography classes with letter-spacing | `colors_and_type.css` (integrated) |
+| `preview/_shared-config.js` | Per-utility Tailwind color maps | Referenced in DESIGN.md component specs |
 
-The palette is IBM Carbon-derived (the Carbon blue ramp `#4589ff` / `#0f62fe` / `#0043ce` / `#002d9c` is unmistakable) layered over a Tailwind-aligned neutral/slate scale. The role-and-state token naming (`{category}-{role}-{variant}-{state}`) echoes Shopify Polaris and Atlassian's token taxonomy. The flat, bordered, label-on-top form composition is closest to GOV.UK and Stripe Dashboard discipline. Sub-brands (Paysera POS, Paysera Tickets) swap the logo only and inherit every token.
+Upstream production source: `gitlab.paysera.net/frontend/lib-paysera-ui` → `@paysera/ui/dist/styles/tokens.css` (Figma `Light.tokens.json` + `Dark.tokens.json`).
+
+## Preserved Assets
+
+Brand assets preserved under `assets/` from the brand guide and SVG exports:
+
+| Asset | File | Usage |
+|-------|------|-------|
+| Wordmark (RGB) | `assets/logo-rgb.svg` | Default logo on light backgrounds |
+| Wordmark (black) | `assets/logo-black.svg` | Monochrome contexts |
+| Wordmark (white) | `assets/logo-white.svg` | On dark/colored backgrounds |
+| Wordmark (inverted) | `assets/logo-rgb-inverted.svg` | Inverted color scheme |
+| Logomark (RGB) | `assets/logomark-rgb.svg` | Compact mark, app icons |
+| Logomark (black) | `assets/logomark-black.svg` | Monochrome compact mark |
+| Logomark (white) | `assets/logomark-white.svg` | Compact mark on dark backgrounds |
+| Logomark (inverted) | `assets/logomark-rgb-inverted.svg` | Inverted compact mark |
+| Brand colours | `assets/brand-colours.png` | Colour reference swatch |
 
 ## 2. Color
 
-Paysera color is **role-first**. You never pick "green" — you pick `surface-success-*` because the meaning is "succeeded". The base palette below is the raw primitive layer; application and component code consume the semantic layer only.
+### Two-level token system
 
-### Base Palette (primitives)
+Paysera uses a two-level CSS variable architecture (from `@paysera/ui/dist/styles/tokens.css`):
 
-| Token | Hex | Ramp role |
-|-------|-----|-----------|
-| `--paysera-blue` | `#000099` | Brand mark / hero only — never an action |
-| `--blue-600` | `#0f62fe` | Action / info primary |
-| `--blue-500` | `#4589ff` | Action hover, dark-mode action/info icon |
-| `--blue-400` | `#78a9ff` | Dark-mode action / info text (AA on slate-800 card) |
-| `--blue-700` | `#0043ce` | Action pressed |
-| `--blue-50` | `#eff6ff` | Info / action subtle surface |
-| `--green-600` | `#16a34a` | Success primary surface |
-| `--green-700` | `#15803d` | Success text |
-| `--red-600` | `#dc2626` | Critical primary surface / border |
-| `--red-700` | `#b91c1c` | Critical text (AA on red-50 subtle surface) |
-| `--red-400` | `#f87171` | Dark-mode critical text (AA on slate-800 card) |
-| `--red-50` | `#fef2f2` | Critical subtle surface |
-| `--yellow-500` | `#eab308` | Warning primary surface |
-| `--yellow-700` | `#a16207` | Warning text |
-| `--orange-50` | `#fff7ed` | Warning subtle surface |
-| `--gray-800` | `#1f2937` | Body text (light) |
-| `--gray-500` | `#6b7280` | Muted text |
-| `--gray-300` | `#d1d5db` | Default border (light) |
-| `--gray-100` | `#f3f4f6` | Secondary background (light) |
-| `--slate-950` | `#020617` | Tertiary action surface (buttons, switch-off, tooltip) |
-| `--slate-900` | `#0f172a` | Page background (dark) |
-| `--slate-800` | `#1e293b` | Card surface (dark) |
-| `--slate-50` | `#f8fafc` | Body text (dark) |
-| `--white` | `#ffffff` | Page background (light), card surface (light), inversed text |
+- **Level 1 (Base Palette)**: Named colors from Figma (`--blue-600`, `--gray-100`, etc.)
+- **Level 2 (Semantic Tokens)**: Design system tokens referencing base palette (`--surface-action-primary-initial`, etc.)
 
-### Key Semantic Tokens (light theme)
+Naming pattern: `{property}-{purpose}-{variant}-{state}`
+- Properties: `background`, `border`, `icon`, `surface`, `text`, `focus-outline`
+- Purposes: `action`, `critical`, `info`, `inversed`, `neutral`, `success`, `warning`
+- Variants: `primary`, `secondary`, `tertiary`
+- States: `initial`, `hover`, `pressed`, `disabled`, `visited`
 
-| Role | Token | Resolves to |
-|------|-------|-------------|
-| Primary CTA background | `--surface-action-primary-initial` | `#0f62fe` |
-| Primary CTA hover | `--surface-action-primary-hover` | `#4589ff` |
-| Primary CTA text | `--text-inversed-primary-initial` | `#ffffff` |
-| Body text | `--text-neutral-primary-initial` | `#1f2937` |
-| Muted text | `--text-neutral-secondary-initial` | `#6b7280` |
-| Default border | `--border-neutral-primary-initial` | `#d1d5db` |
-| Page background | `--background-neutral-primary-initial` | `#ffffff` |
-| Card surface | `--surface-neutral-primary-initial` | `#ffffff` |
-| Error text | `--text-critical-primary-initial` | `#b91c1c` |
-| Error surface | `--surface-critical-secondary-initial` | `#fef2f2` |
-| Success text | `--text-success-primary-initial` | `#15803d` |
-| Success surface | `--surface-success-secondary-initial` | `#f0fdf4` |
-| Warning text | `--text-warning-primary-initial` | `#a16207` |
-| Warning surface | `--surface-warning-secondary-initial` | `#fff7ed` |
-| Info text | `--text-info-primary-initial` | `#0f62fe` |
-| Info surface | `--surface-info-secondary-initial` | `#eff6ff` |
+### Base Palette (Level 1)
 
-### Status Color Mapping
+| Scale | Hex | Notes |
+|-------|-----|-------|
+| `--blue-50` | `#eff6ff` | Info tint backgrounds |
+| `--blue-100` | `#dbeafe` | Selected states, pagination active |
+| `--blue-200` | `#d0e2ff` | Focus rings |
+| `--blue-500` | `#4589ff` | Hover states |
+| `--blue-600` | `#0f62fe` | **Primary action blue** — buttons, links, active states |
+| `--blue-700` | `#0043ce` | Pressed states |
+| `--blue-800` | `#002d9c` | Gradient start for placeholder images |
+| `--gray-50` | `#f9fafb` | Subtle backgrounds |
+| `--gray-100` | `#f3f4f6` | Secondary surfaces, table headers |
+| `--gray-200` | `#e5e7eb` | Disabled borders |
+| `--gray-300` | `#d1d5db` | Default input borders |
+| `--gray-400` | `#9ca3af` | Tertiary text, faded icons |
+| `--gray-500` | `#6b7280` | Secondary/muted text |
+| `--gray-800` | `#1f2937` | **Primary body text** |
+| `--green-50` | `#f0fdf4` | Success tint background |
+| `--green-500` | `#33cc66` | Brand logomark green |
+| `--green-600` | `#16a34a` | Success primary surfaces |
+| `--green-700` | `#15803d` | Success primary text/icons |
+| `--red-50` | `#fef2f2` | Critical tint background |
+| `--red-600` | `#dc2626` | Critical primary — errors, destructive |
+| `--slate-50` | `#f8fafc` | Neutral icon background |
+| `--slate-600` | `#475569` | Dark theme secondary icons |
+| `--slate-800` | `#1e293b` | Dark theme card surfaces |
+| `--slate-900` | `#0f172a` | Dark theme page background |
+| `--slate-950` | `#020617` | **Secondary button fill, switch OFF, tooltips** |
+| `--yellow-500` | `#eab308` | Warning primary surfaces |
+| `--yellow-700` | `#a16207` | Warning primary text |
+| `--orange-50` | `#fff7ed` | Warning tint background |
 
-| Meaning | Surface token | Text token | Example |
-|---------|---------------|------------|---------|
-| Success / Positive | `--surface-success-secondary-initial` | `--text-success-primary-initial` | "Paid", "Completed", "+12%" |
-| Critical / Negative | `--surface-critical-secondary-initial` | `--text-critical-primary-initial` | "Failed", "Declined", "-8%" |
-| Warning / Pending | `--surface-warning-secondary-initial` | `--text-warning-primary-initial` | "Pending", "Review" |
-| Info / Neutral | `--surface-info-secondary-initial` | `--text-info-primary-initial` | "Processing", "Draft" |
+Brand-only colors (not in the semantic token system):
+- `#000099` — Paysera Blue. Brand mark only — hero moments, logotype. Not for default actions.
+- `#33CC66` — Logomark green arc. Maps to success semantic tokens in product UI.
 
-### Contrast (WCAG AA)
+### Semantic Tokens (Level 2 — Light Theme)
 
-All paired tokens are verified at 4.5:1 minimum against their intended background (ratios computed with the WCAG 2.x sRGB relative-luminance formula). Body `#1f2937` on white is 13.6:1. Action `#0f62fe` on white is 5.0:1. Success text `#15803d` on `#f0fdf4` is 4.79:1. Critical text uses `#b91c1c` (`--red-700`), not `#dc2626`: `#dc2626` on the subtle red surface `#fef2f2` is only 4.41:1 and fails, while `#b91c1c` is 5.91:1 on `#fef2f2` and 6.47:1 on white. Warning text uses `#a16207` (not `#eab308`) precisely because `a16207` clears 4.5:1 on `#fff7ed` (4.64:1) where the brighter yellow would fail. Tertiary text uses `#6b7280` (`--gray-500`, 4.83:1 on white), not `#9ca3af` (`--gray-400`, only 2.54:1) — `gray-400` is reserved for decorative/disabled non-text and borders.
+#### Surfaces
 
-### Dark Mode
+| Token | Resolves to | Hex | Usage |
+|-------|------------|-----|-------|
+| `--surface-action-primary-initial` | `--blue-600` | `#0f62fe` | Primary button background |
+| `--surface-action-primary-hover` | `--blue-500` | `#4589ff` | Primary button hover |
+| `--surface-action-primary-pressed` | `--blue-700` | `#0043ce` | Primary button pressed |
+| `--surface-action-tertiary-initial` | `--slate-950` | `#020617` | **Secondary button fill** (dark!) |
+| `--surface-action-tertiary-hover` | `--slate-900` | `#0f172a` | Secondary button hover |
+| `--surface-action-secondary-hover` | `--blue-50` | `#eff6ff` | Ghost/tertiary button hover |
+| `--surface-action-secondary-pressed` | `--blue-100` | `#dbeafe` | Pagination active, selected rows |
+| `--surface-neutral-primary-initial` | `--white` | `#ffffff` | Card background, page background |
+| `--surface-neutral-primary-hover` | `--blue-100` | `#dbeafe` | MenuItem hover |
+| `--surface-neutral-secondary-initial` | `--gray-100` | `#f3f4f6` | Table header, muted fill |
+| `--surface-critical-primary-initial` | `--red-600` | `#dc2626` | Critical button fill |
+| `--surface-critical-secondary-initial` | `--red-50` | `#fef2f2` | Critical tint |
+| `--surface-success-primary-initial` | `--green-600` | `#16a34a` | Success primary |
+| `--surface-success-secondary-initial` | `--green-50` | `#f0fdf4` | Success tint |
+| `--surface-warning-primary-initial` | `--yellow-500` | `#eab308` | Warning primary |
+| `--surface-warning-secondary-initial` | `--orange-50` | `#fff7ed` | Warning tint |
+| `--surface-info-primary-initial` | `--blue-600` | `#0f62fe` | Info primary |
+| `--surface-info-secondary-initial` | `--blue-50` | `#eff6ff` | Info tint |
 
-Dark mode is a genuine semantic remap, not a copy of the light block. The base palette is unchanged; only the Level-2 tokens flip under `[data-theme="dark"]`. Page background becomes `--slate-900` (`#0f172a`), card surface becomes `--slate-800` (`#1e293b`), body text becomes `--slate-50` (`#f8fafc`).
+#### Backgrounds
 
-Crucially, **action/info/critical text shifts lighter than the Paysera source so it clears AA on the dark *card* surface, not just the page background.** This is a fork-level deviation: the upstream `lib-paysera-ui` dark block keeps these roles at `#4589ff`/`#ef4444` (`--blue-500`/`--red-500`), which clear AA on the page background `slate-900` (`#4589ff` 5.33:1, `#ef4444` 4.74:1) but **fail on the slate-800 card surface** (`#4589ff` 4.37:1, `#ef4444` 3.89:1) — and most link/error/badge text in this product lives inside a card. We therefore use `#78a9ff` (`--blue-400`) for action/info text (6.21:1 on slate-800, 7.58:1 on slate-900) and `#f87171` (`--red-400`) for critical text (5.29:1 on slate-800, 6.45:1 on slate-900). Icons stay at `--blue-500`/`--red-500` (the source values) since the large-graphic threshold is 3:1, which they clear. The `*-secondary` text tints likewise flip to the LIGHT end of each ramp (`--red-300`, `--blue-300`, `--green-300`, `--orange-300`) — all 7:1+ on slate-800 — rather than the source's dark `-800` tints, which would be invisible on a dark card. The full override lives in `tokens.css`.
+| Token | Resolves to | Hex | Usage |
+|-------|------------|-----|-------|
+| `--background-neutral-primary-initial` | `--white` | `#ffffff` | Page background (light) |
+| `--background-neutral-secondary-initial` | `--gray-100` | `#f3f4f6` | Secondary surface |
 
-```css
-:root {
-  --surface-action-primary-initial: #0f62fe;
-  --background-neutral-primary-initial: #ffffff;
-  --surface-neutral-primary-initial: #ffffff;
-  --text-neutral-primary-initial: #1f2937;
-  --text-action-primary-initial: #0f62fe;
-  --text-info-primary-initial: #0f62fe;
-  --text-critical-primary-initial: #b91c1c; /* red-700 — AA on red-50 subtle surface */
-  --text-neutral-tertiary-initial: #6b7280; /* gray-500 — AA on white */
-  --focus-outline-neutral-primary-initial: #0f62fe;
-}
+#### Text
 
-[data-theme="dark"] {
-  --background-neutral-primary-initial: #0f172a;
-  --surface-neutral-primary-initial: #1e293b;  /* card surface — the AA-binding background */
-  --surface-neutral-secondary-initial: #334155;
-  --text-neutral-primary-initial: #f8fafc;
-  --text-neutral-secondary-initial: #9ca3af;
-  --text-action-primary-initial: #78a9ff;      /* blue-400 — AA on slate-800 card */
-  --text-info-primary-initial: #78a9ff;
-  --icon-action-primary-initial: #4589ff;       /* blue-500 icon — 3:1 large-graphic bar */
-  --text-critical-primary-initial: #f87171;    /* red-400 — AA on slate-800 card */
-  --border-neutral-primary-initial: #374151;
-  --focus-outline-neutral-primary-initial: #4589ff;
-}
-```
+| Token | Resolves to | Hex | Usage |
+|-------|------------|-----|-------|
+| `--text-neutral-primary-initial` | `--gray-800` | `#1f2937` | Primary body text |
+| `--text-neutral-secondary-initial` | `--gray-500` | `#6b7280` | Secondary/muted text |
+| `--text-neutral-tertiary-initial` | `--gray-400` | `#9ca3af` | Faded/placeholder text |
+| `--text-action-primary-initial` | `--blue-600` | `#0f62fe` | Links, text buttons |
+| `--text-action-primary-hover` | `--blue-500` | `#4589ff` | Link hover |
+| `--text-action-primary-visited` | `--indigo-600` | `#4f46e5` | Visited links |
+| `--text-critical-primary-initial` | `--red-600` | `#dc2626` | Error text |
+| `--text-success-primary-initial` | `--green-700` | `#15803d` | Success text |
+| `--text-warning-primary-initial` | `--yellow-700` | `#a16207` | Warning text |
+| `--text-info-primary-initial` | `--blue-600` | `#0f62fe` | Info text |
+| `--text-inversed-primary-initial` | `--white` | `#ffffff` | Text on dark/primary backgrounds |
+
+#### Borders
+
+| Token | Resolves to | Hex | Usage |
+|-------|------------|-----|-------|
+| `--border-neutral-primary-initial` | `--gray-300` | `#d1d5db` | Input borders, dividers |
+| `--border-neutral-secondary-initial` | `--gray-100` | `#f3f4f6` | Light dividers |
+| `--border-action-primary-initial` | `--blue-600` | `#0f62fe` | Focus borders, primary outlines |
+| `--border-action-secondary-initial` | `--gray-300` | `#d1d5db` | Tertiary button, chip borders |
+| `--border-critical-primary-initial` | `--red-600` | `#dc2626` | Error borders |
+| `--border-success-primary-initial` | `--green-700` | `#15803d` | Success borders |
+
+#### Icons
+
+| Token | Resolves to | Usage |
+|-------|------------|-------|
+| `--icon-neutral-primary-initial` | `--slate-950` | Primary icons |
+| `--icon-neutral-secondary-initial` | `--gray-500` | Muted icons |
+| `--icon-action-primary-initial` | `--blue-600` | Action icons |
+| `--icon-critical-primary-initial` | `--red-600` | Error icons |
+| `--icon-success-primary-initial` | `--green-700` | Success icons |
+
+#### Focus
+
+| Token | Resolves to | Usage |
+|-------|------------|-------|
+| `--focus-outline-neutral-primary-initial` | `--blue-600` | Keyboard focus ring |
+
+### Dark Theme Overrides
+
+Dark mode is activated via `[data-theme="dark"]` on `<html>`, NOT via `.dark` class. Key overrides:
+
+| Token | Light | Dark |
+|-------|-------|------|
+| `--background-neutral-primary-initial` | `--white` | `--slate-900` |
+| `--surface-neutral-primary-initial` | `--white` | `--slate-800` |
+| `--surface-neutral-secondary-initial` | `--gray-100` | `--slate-700` |
+| `--text-neutral-primary-initial` | `--gray-800` | `--slate-50` |
+| `--text-neutral-secondary-initial` | `--gray-500` | `--gray-500` |
+| `--border-neutral-primary-initial` | `--gray-300` | `--gray-700` |
+| `--icon-neutral-primary-initial` | `--slate-950` | `--slate-50` |
+
+Theme selection by context:
+- **Customer-facing web**: light (default)
+- **Internal ops/admin**: dark
+- **Data dashboards**: dark
 
 ## 3. Typography
 
-Paysera uses **Inter for all UI** — headings, body, labels, buttons — and **PT Mono** for anything that must align as a column or read as an identifier: transaction IDs, IBANs, hashes, tabular numbers. There is no display serif and no second sans; the secondary token is kept identical to primary only to allow future divergence.
+### Font Families
 
-### Font Stack
+- **Primary (all UI):** `Inter`, `system-ui`, `sans-serif`
+- **Code:** `PT Mono`, `ui-monospace`, `monospace`
 
-```css
-:root {
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-mono: "PT Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-}
-```
+### Type Scale (from `tokens/typography.json`)
 
-### Type Scale (pre-composed text styles)
+| Token | Size | Weight | Line Height | Usage |
+|-------|------|--------|-------------|-------|
+| `display-l` | 56px (3.5rem) | 600 | 64px | Hero headlines (marketing, splash) |
+| `display-m` | 48px (3rem) | 600 | 52px | Hero headlines (medium) |
+| `display-s` | 36px (2.25rem) | 600 | 44px | Hero headlines (small) / KPI numbers |
+| `headline-l` | 32px (2rem) | 600 | 40px | Page title |
+| `headline-m` | 28px (1.75rem) | 600 | 36px | Section header, modal title |
+| `headline-s` | 24px (1.5rem) | 600 | 32px | Card title, subsection |
+| `title-l` | 22px (1.375rem) | 600 | 28px | Large label, form group title |
+| `title-m` | 16px (1rem) | 600 | 24px | Default title, button label |
+| `title-s` | 14px (0.875rem) | 600 | 20px | Small title, emphasized table header |
+| `body-l` | 16px (1rem) | 400 | 24px | Default paragraph text |
+| `body-m` | 14px (0.875rem) | 400 | 20px | Secondary text, descriptions |
+| `body-s` | 12px (0.75rem) | 400 | 16px | Legal text, footnotes, metadata |
+| `label-l` | 16px (1rem) | 500 | 24px | Form label (emphasized) |
+| `label-m` | 14px (0.875rem) | 500 | 20px | Default form label, chip text |
+| `label-s` | 12px (0.75rem) | 500 | 16px | KPI label (uppercase-tracked), table header |
+| `code-l` | 16px (1rem) | 400 | 24px | Code block |
+| `code-m` | 14px (0.875rem) | 400 | 20px | Inline code, transaction hash |
+| `code-s` | 12px (0.75rem) | 400 | 16px | Numeric IDs in tables |
 
-| Role | Style | Size | Weight | Line Height | Use |
-|------|-------|------|--------|-------------|-----|
-| Display | `display-s` | 36px (2.25rem) | 600 | 1.1 | Hero / KPI numbers on dashboards |
-| H1 | `headline-l` | 32px (2rem) | 600 | 1.2 | Page title |
-| H2 | `headline-m` | 28px (1.75rem) | 600 | 1.25 | Section header, modal title |
-| H3 | `headline-s` | 24px (1.5rem) | 600 | 1.3 | Card title, subsection |
-| Title | `title-l` | 22px (1.375rem) | 600 | 2rem | Form group title |
-| Title | `title-m` | 16px (1rem) | 600 | 1.5rem | Default title, button label |
-| Body | `body-l` | 16px (1rem) | 400 | 1.5rem | Default paragraph text |
-| Body | `body-m` | 14px (0.875rem) | 400 | 1.25rem | Secondary text, helper text |
-| Caption | `body-s` | 12px (0.75rem) | 400 | 1rem | Legal text, footnotes, metadata |
-| Label | `label-m` | 14px (0.875rem) | 500 | 1.25rem | Form label, chip text |
-| Label | `label-s` | 12px (0.75rem) | 500 | 1rem | KPI label (uppercase-tracked), input label-on-top |
-| Code | `code-m` | 14px (0.875rem) | 400 | 1.25rem | Inline code, transaction hash, IBAN |
+Letter spacing: `0em` throughout. No expanded or condensed tracking (except `label-s` which uses `0.02em` for uppercase eyebrows).
 
-Use the pre-composed `headline-*` / `body-*` / `label-*` utility classes rather than assembling size + weight + family by hand. Type scale is identical across breakpoints — Paysera does **not** use `clamp()` fluid typography; instead choose a smaller style at smaller breakpoints (`display-m` desktop → `headline-l` mobile).
+### Font Weights
 
-**Font labels for catalog extraction:**
+| Weight | Value | Usage |
+|--------|-------|-------|
+| Normal | 400 | Body text |
+| Medium | 500 | Labels |
+| Semibold | 600 | Display, headline, title |
+| Bold | 700 | Semantic headings (h2–h6) |
+| Extrabold | 800 | h1 only |
 
-```
-Display: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif
-Body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif
-Mono: "PT Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace
-```
+### Usage Rules
+
+- Page titles, card titles, nav items, tab labels, button labels: **Title Case**.
+- Body copy, descriptions, helper text, error messages: **Sentence case**.
+- Metadata eyebrow labels only: **ALL CAPS** `label-s`.
+- IBANs and account numbers: `code-l` in PT Mono, grouped in 4-digit blocks.
+- Currency amounts: tabular numerics. Number before symbol with thin-space thousands: `1 200.50 €`.
+- Use typography classes (`display-l`, `body-m`, etc.), never raw `text-sm`/`font-bold`.
 
 ## 4. Spacing
 
-Tailwind-aligned scale on a 4px base (1rem = 16px). Use for padding, margin, and gap.
+### Spacing Scale (from `tokens/spacing.json`)
 
-```css
-:root {
-  --space-1: 0.25rem;  /* 4px  */  --space-2: 0.5rem;  /* 8px  */
-  --space-3: 0.75rem;  /* 12px */  --space-4: 1rem;    /* 16px */
-  --space-5: 1.25rem;  /* 20px */  --space-6: 1.5rem;  /* 24px */
-  --space-8: 2rem;     /* 32px */  --space-10: 2.5rem; /* 40px */
-  --space-12: 3rem;    /* 48px */  --space-16: 4rem;   /* 64px */
-}
-```
+| Token | Value | Common usage |
+|-------|-------|-------------|
+| `0` | 0 | — |
+| `0.5` | 2px (0.125rem) | — |
+| `1` | 4px (0.25rem) | Chip padding-y |
+| `1.5` | 6px (0.375rem) | — |
+| `2` | 8px (0.5rem) | Inline gap |
+| `2.5` | 10px (0.625rem) | Chip padding-x, button padding-sm |
+| `3` | 12px (0.75rem) | Inline gap, button padding-sm |
+| `4` | 16px (1rem) | Card padding-sm, button padding-md |
+| `5` | 20px (1.25rem) | Page padding (mobile) |
+| `6` | 24px (1.5rem) | Card padding, form field gap |
+| `8` | 32px (2rem) | Page padding (desktop), section gap |
+| `10` | 40px (2.5rem) | Page padding (desktop alt) |
+| `12` | 48px (3rem) | — |
+| `16` | 64px (4rem) | — |
+| `20` | 80px (5rem) | — |
 
-| Usage | Value |
-|-------|-------|
-| Card padding | `--space-6` (24px); `--space-4` (16px) on small |
-| Page padding (desktop) | `--space-8`–`--space-10` (32–40px) |
-| Page padding (mobile) | `--space-5` (20px) |
-| Form field gap | `--space-6` (24px) |
-| Section gap | `--space-8` (32px) |
-| Inline gap | `--space-2`–`--space-3` (8–12px) |
+### Border Radius (from `tokens/spacing.json`)
 
-### Radius
+| Token | Value | Usage |
+|-------|-------|-------|
+| `rounded` | 4px | **Button, Badge, Chip, Input, Modal buttons** (most common) |
+| `rounded-md` | 6px | Input, button (source default) |
+| `rounded-lg` | 8px | Card, Alert, Modal, Drawer, RadioCard |
+| `rounded-xl` | 12px | Dashboard tiles (hero cards) |
+| `rounded-full` | 9999px | Avatar, Switch knob, Pill-chip |
 
-```css
-:root {
-  --radius-sm: 0.125rem;     /* 2px  */
-  --radius-default: 0.25rem; /* 4px — button, input, badge */
-  --radius-md: 0.375rem;     /* 6px  */
-  --radius-lg: 0.5rem;       /* 8px — form cards, modals */
-  --radius-xl: 0.75rem;      /* 12px — dashboard tiles */
-  --radius-full: 9999px;     /* chips, pills, switch track */
-}
-```
+Note: `@paysera/ui` does not override Tailwind's default border-radius values.
+
+### Shadows (from `tokens/shadows.json`)
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `shadow-sm` | `0 1px 2px 0 rgba(0,0,0,0.05)` | Pressed/subtle container |
+| `shadow-default` | `0 1px 3px 0 rgba(0,0,0,0.1), 0 1px 2px -1px rgba(0,0,0,0.1)` | Raised cards, dashboard tiles |
+| `shadow-md` | `0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)` | Dropdown menus, select surfaces |
+| `shadow-lg` | `0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1)` | Popovers, tooltips, hover lifts |
+| `shadow-xl` | `0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)` | Modals, drawers |
+| `shadow-2xl` | `0 25px 50px -12px rgba(0,0,0,0.25)` | Full-screen overlays, auth cards |
+| `shadow-inner` | `inset 0 2px 4px 0 rgba(0,0,0,0.05)` | Inset wells: search focus, code blocks |
+
+Dark theme: use `sm-light` / `base-light` variants with white glow instead of darker drop-shadow.
+
+### Elevation hierarchy
+
+| Level | Shadow | Usage |
+|-------|--------|-------|
+| 1 (base) | `none` | Page background |
+| 2 (raised) | `default` | Cards, panels, table rows |
+| 3 (overlay) | `md` | Dropdowns, selects, menus |
+| 4 (modal) | `xl` | Full-bleed dialogs, drawers |
+| 5 (transient) | `lg` | Toasts (Snackbar), tooltips |
+
+### Density
+
+- Default content density: comfortable (16px vertical rhythm).
+- Tables and lists: compact (row sizes sm/md/lg with h-8/h-10/h-12).
+- Dashboard cards: 24px internal padding, 16px gap between cards.
+- Form fields: 48px height (md/default), 56px (lg), 32px (sm).
+- Minimum touch target: 44px for mobile, 32px for desktop.
 
 ## 5. Layout & Composition
 
-### Grid System
+### Page Structure
 
-Mobile-first, 12 columns on desktop (24px gutter), 8 on tablet (16px), 4 on mobile (16px). Content max-width caps: 1400px dashboards, 640px centered forms, 720px long-form reading.
+Standard authenticated layout:
+- **Topbar**: 64px height, white background, solid bottom border (`border-neutral-primary-initial`). Left: app switcher grid icon + Paysera Banking logo. Right: user avatar (32px circle) + name + ID.
+- **Sidebar**: 240px width, white background, right border. Nav items: icon + label, 44px height, 16px left padding. Active item: `surface-action-secondary-pressed` background with `text-action-primary-initial` text and left accent.
+- **Content area**: Fluid, max-width 1400px (dashboard) or 640px (forms, centered). 32px padding from sidebar edge, 24px top padding below breadcrumbs.
+- **Wizard topbar** (for multi-step flows): Close/X icon left, centered flow title, non-interactive user entity right.
 
-```css
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--space-6);
-  max-width: 1400px;
-  margin-inline: auto;
-  padding: var(--space-8);
-}
+### Grid (from `tokens/spacing.json`)
 
-/* KPI strip: 5 columns on lg+, collapses to 2 on small via minmax */
-.kpi-strip {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: var(--space-4);
-}
-```
+| Target | Columns | Gutter |
+|--------|---------|--------|
+| Desktop | 12 | 24px |
+| Tablet | 8 | 16px |
+| Mobile | 4 | 16px |
 
-### Breakpoints
+Dashboard cards: CSS Grid, `minmax(320px, 1fr)`, 16px gap.
+Detail views: 2-column (list/master on left, detail on right) at desktop, stacking at tablet.
+
+### Responsive Breakpoints (from `tokens/spacing.json`)
 
 | Name | Min width | Target |
 |------|-----------|--------|
@@ -241,333 +342,322 @@ Mobile-first, 12 columns on desktop (24px gutter), 8 on tablet (16px), 4 on mobi
 | `md` | 768px | Tablets |
 | `lg` | 1024px | Laptops, small desktops |
 | `xl` | 1280px | Standard desktops |
-| `2xl` | 1536px | Large desktops |
+| `2xl` | 1536px | Large desktops, 4K scaled |
 
-**Collapsing patterns:** data tables → card list below `md`; multi-column forms → single column below `md`; side-by-side charts → stacked below `lg`; fixed sidebar nav → bottom tab bar or drawer below `md`; modal → bottom sheet below `sm`.
+**Mobile-first** — default layout assumes mobile, progressively enhanced.
 
-**Touch targets:** minimum 44×44px below `lg`, minimum 32×32px at `lg` and above.
+### Container max-widths
 
-### Elevation Hierarchy
+| Context | Max-width |
+|---------|-----------|
+| Dashboard content | 1400px |
+| Form (centered) | 640px |
+| Long-form reading | 720px |
 
-Flat by default. Pick exactly one level per surface — never stack two shadow tiers on the same card.
+### Collapsing patterns (from `RULES.md`)
 
-| Level | Shadow | Use |
-|-------|--------|-----|
-| Base | `none` | Page background |
-| Raised | `--shadow-default` | Cards, panels, table rows |
-| Overlay | `--shadow-md` | Dropdowns, selects, menus |
-| Modal | `--shadow-xl` | Dialogs, drawers |
-| Transient | `--shadow-lg` | Toasts, tooltips |
+- Data tables → card list below `md`
+- Multi-column forms → single column below `md`
+- Side-by-side charts → stacked below `lg`
+- Fixed sidebar nav → bottom tab bar or drawer below `md`
+- Modal → bottom sheet below `sm`
 
-This is an intentionally reduced elevation subset (`sm`/`default`/`md`/`lg`/`xl`); the source `shadows.json` also defines `2xl`, `inner`, and dark-theme white-glow variants that this flat-by-default system does not ship.
+### Navigation
+
+- Sidebar nav items: Accounts, Cards, Transfers, Checkout, Currency, Settings.
+- Breadcrumbs: forbidden on first-level pages (opened from sidebar). Required on second-level and deeper.
+- Tabs: used within pages for sub-sections (e.g. Digital / Physical card groups).
 
 ## 6. Components
 
-All component CSS references semantic tokens — never raw hex — so a single `[data-theme="dark"]` flip recolors everything. Every interactive component carries a `:focus-visible` outline matching the real `@paysera/ui` themes (`outline 2px` + `outline-offset 1px` in `--focus-outline-neutral-primary-initial`).
+### Buttons (6 variants from `Button.theme.js`)
 
-### Button
+| Variant | Background | Text | Border | Notes |
+|---------|-----------|------|--------|-------|
+| Primary | `surface-action-primary-initial` (#0f62fe) | `text-inversed-primary-initial` (white) | None | Main CTA. Hover: `surface-action-primary-hover` |
+| Secondary | `surface-action-tertiary-initial` (#020617, slate-950!) | `text-inversed-primary-initial` (white) | None | **Dark filled, NOT blue-outlined** |
+| Tertiary | Transparent | `text-neutral-primary-initial` | 1px `border-action-secondary-initial` | Bordered, outlined |
+| Ghost | Transparent | `text-neutral-primary-initial` | None | Minimal, hover: `surface-action-secondary-hover` |
+| Critical | Transparent | `text-critical-primary-initial` | 1px `border-critical-primary-initial` | **NOT red-filled**. Outline only |
+| Text | Transparent | `text-action-primary-initial` | None | Link-style button |
 
-Six variants. One `primary` per view; a second strong action becomes `secondary`. Note the counter-intuitive signature: `secondary` is the dark **tertiary** surface (slate-950), not a light grey.
+Sizes: `lg` (h-12 px-4) / `md` (h-10 px-3) / `sm` (h-8 px-2).
+Border radius: `rounded` (4px). Text: `label-m` (14px medium).
+Labels: verbs naming the consequence — "Continue", "Pay 557.00 €". Never "Submit", never "OK".
 
-```css
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-1);
-  height: 2.5rem;            /* md: 40px; lg: 3rem; sm: 2rem */
-  padding-inline: var(--space-3);
-  border-radius: var(--radius-default);
-  border: 1px solid transparent;
-  font-family: var(--font-sans);
-  font-size: 0.875rem;       /* label-m */
-  font-weight: 500;
-  cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
-}
+### Cards (from `@paysera/ui/components/card`)
 
-.btn:focus-visible {
-  outline: 2px solid var(--focus-outline-neutral-primary-initial);
-  outline-offset: 1px;
-}
+| Variant | Shadow | Border | Usage |
+|---------|--------|--------|-------|
+| `default` | `shadow-default` | None | Dashboard tiles |
+| `outlined` | None | `border-neutral-secondary-initial` | Forms, nested containers |
+| `interactive` | Hover elevation | Visible | Clickable cards |
 
-.btn-primary {
-  background: var(--surface-action-primary-initial);
-  color: var(--text-inversed-primary-initial);
-}
-.btn-primary:hover { background: var(--surface-action-primary-hover); }
-.btn-primary:active { background: var(--surface-action-primary-pressed); }
+Radius: `rounded-xl` (12px) for dashboard tiles, `rounded-lg` (8px) for forms.
+Padding: `6` (24px) standard, `4` (16px) on small screens.
 
-.btn-secondary {
-  background: var(--surface-action-tertiary-initial); /* slate-950 — intentional */
-  color: var(--text-inversed-primary-initial);
-}
-.btn-secondary:hover { background: var(--surface-action-tertiary-hover); }
+### Form Inputs (from `Input.theme.js`)
 
-.btn-tertiary {
-  background: transparent;
-  border-color: var(--border-action-secondary-initial);
-  color: var(--text-neutral-primary-initial);
-}
-.btn-tertiary:hover { background: var(--surface-action-secondary-hover); }
+Label-on-top structure (floating-label is the long-term signature but temporarily simplified):
+- Container: bordered `<label>` with `border-action-secondary-initial`, `rounded-md`
+- Inside: `h-12 px-3 flex flex-col justify-center`
+- Top: `<span class="label-s">Label</span>`
+- Bottom: `<input class="body-m bg-transparent">`
+- Focus: `outline-2 outline-offset-1`, border remains same family
+- Error: `border-2 border-critical-primary-initial` + `text-critical-primary-initial` helper
+- Disabled: `bg-surface-action-primary-disabled` + `text-neutral-secondary-initial`
 
-.btn-ghost {
-  background: transparent;
-  color: var(--text-neutral-primary-initial);
-}
-.btn-ghost:hover { background: var(--surface-action-secondary-hover); }
+### Select / Dropdown (from `Dropdown.theme.js`)
 
-.btn-critical {
-  background: transparent;
-  border-color: var(--border-critical-primary-initial);
-  color: var(--text-critical-primary-initial);
-}
-.btn-critical:hover { background: var(--surface-critical-secondary-hover); }
+- Same input container dimensions as inputs
+- Chevron: `chevron-down` 16px right-aligned
+- Dropdown panel: `bg-surface-neutral-primary-initial`, `shadow-md`, `rounded-sm`, `min-w-[300px]`
+- Selected item: `bg-surface-action-secondary-pressed` + checkmark on right
+- Disabled item: `bg-surface-neutral-secondary-disabled text-neutral-secondary-initial`
 
-.btn[disabled] {
-  background: var(--surface-neutral-secondary-disabled);
-  color: var(--text-neutral-secondary-initial);
-  cursor: not-allowed;
-}
-```
+### Radio & Checkbox
 
-### Input (bordered container, label-on-top)
+- Both: `h-4 w-4 border-neutral-primary-initial text-action-primary-initial`
+- RadioCard: card with radio on right, selected = `border-action-primary-initial` (1px colour change only, not border-2)
 
-The canonical Paysera field is a single bordered `<label>` wrapping a top `label-s` over a `body-m` value — never a placeholder-as-label. Focus outline sits on the container via `:focus-within`.
+### Switch / Toggle (from `Switch.theme.js`)
 
-```css
-.field {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 3rem;              /* md; lg: 3.5rem */
-  padding-inline: var(--space-3);
-  border: 1px solid var(--border-action-secondary-initial);
-  border-radius: var(--radius-default);
-  background: var(--surface-neutral-primary-initial);
-  cursor: text;
-}
-.field:hover { border-color: var(--border-action-secondary-hover); }
-.field:focus-within {
-  outline: 2px solid var(--focus-outline-neutral-primary-initial);
-  outline-offset: 1px;
-}
+- Track: `h-5 w-10 rounded-full`
+- **OFF state: `surface-action-tertiary-initial` (slate-950, DARK!)** — NOT light gray
+- ON state: `surface-action-primary-initial` (blue)
+- Critical variant: `surface-critical-primary-initial` (always red)
+- Handle: `h-3.5 w-3.5 bg-surface-neutral-primary-initial` (white circle)
 
-.field-label {
-  font-size: 0.75rem;        /* label-s */
-  font-weight: 500;
-  line-height: 1;
-  color: var(--text-neutral-secondary-initial);
-}
+### Tables (from `Table.theme.js`)
 
-.field-input {
-  margin-top: 0.125rem;
-  border: 0;
-  padding: 0;
-  width: 100%;
-  background: transparent;
-  outline: none;
-  font-family: var(--font-sans);
-  font-size: 0.875rem;       /* body-m */
-  color: var(--text-neutral-primary-initial);
-}
+- Header row: `bg-surface-neutral-secondary-initial` (gray-100), `label-m text-neutral-primary-initial` (**dark text, not muted**)
+- Body row: `bg-surface-neutral-primary-initial`, hover: `bg-surface-action-secondary-hover`
+- Selected row: `bg-surface-action-secondary-pressed` (blue-100)
+- Cell padding: `px-4 py-3.5` (default lg), `body-m text-neutral-primary-initial`
+- Row sizes: sm (h-8 py-1.5) / md (h-10 py-2.5) / lg (h-12 py-3.5, **default**)
 
-/* Critical state: 2px red border + red label + helper below */
-.field.is-critical { border-width: 2px; border-color: var(--border-critical-primary-initial); }
-.field.is-critical .field-label { color: var(--text-critical-primary-initial); }
+### Pagination (from `Pagination.theme.js`)
 
-.field-error {
-  margin-top: var(--space-1);
-  padding-inline: var(--space-3);
-  font-size: 0.75rem;        /* body-s */
-  color: var(--text-critical-primary-initial);
-}
-```
+- Page button: `h-8 min-w-8 px-2 rounded label-m`
+- **Active: `bg-surface-action-secondary-pressed text-neutral-primary-initial`** (light blue-100, NOT filled primary!)
+- Inactive: `border border-neutral-secondary-initial text-neutral-primary-initial`
 
-### Card
+### CursorPagination
 
-Default = raised surface with `--shadow-default` and no border. Outlined = flat with a visible border. Never nest a shadowed card inside a shadowed card — inner containers are outlined or flat.
+- Two icon-only tertiary buttons `w-10 h-10 rounded`
+- For append-only/time-ordered data. No page numbers.
 
-```css
-.card {
-  background: var(--surface-neutral-primary-initial);
-  border-radius: var(--radius-xl);   /* lg (8px) for forms */
-  box-shadow: var(--shadow-default);
-  padding: var(--space-6);
-}
-.card-outlined {
-  background: var(--surface-neutral-primary-initial);
-  border: 1px solid var(--border-neutral-secondary-initial);
-  border-radius: var(--radius-xl);
-  box-shadow: none;
-  padding: var(--space-6);
-}
-.card-interactive { transition: box-shadow var(--transition-base); cursor: pointer; }
-.card-interactive:hover { box-shadow: var(--shadow-lg); }
-.card-interactive:focus-visible {
-  outline: 2px solid var(--focus-outline-neutral-primary-initial);
-  outline-offset: 2px;
-}
-.card-title { font-size: 1.375rem; font-weight: 600; color: var(--text-neutral-primary-initial); }
-```
+### Status Indicators (StatusTag from `StatusTag.theme.js`)
+
+- **No pill background**. Coloured icon + dark label text only.
+- Icon variant colours via `text-{variant}-primary-initial`
+- Label: `text-neutral-primary-initial` (dark, always)
+
+### Alert (from `Alert.theme.js`)
+
+- **4px left accent** border, not full border
+- `bg-surface-{variant}-secondary-initial border-{variant}-primary-initial`
+- Layout: icon + content + close button
+- Variants: info / success / warning / critical
+
+### Snackbar / Toast
+
+- **Alert-style** (NOT fully filled): `bg-surface-neutral-primary-initial + border-l-4 border-{variant}-primary-initial`
+- Coloured icon via `text-{variant}-primary-initial`
+- Position: bottom-right. Auto-dismiss 4s.
+
+### Tooltip
+
+- `bg-surface-action-tertiary-initial` (**slate-950, NOT medium gray**) + `text-inversed-primary-initial`
+- `label-s rounded shadow-sm`
+
+### Modal / Dialog
+
+- Overlay: `bg-black/50`
+- Panel: `bg-surface-neutral-primary-initial rounded-lg shadow-xl`
+- Header/footer border: `border-neutral-primary-initial` (gray-300, not secondary)
+- Primary action right, secondary (cancel) left in footer
+
+### Drawer
+
+- Overlay: `bg-black/40`
+- `absolute right-0 top-0 h-full w-full max-w-md`
+
+### Breadcrumbs (from `Breadcrumbs.theme.js`)
+
+- Link: `label-m text-action-primary-initial hover:underline`
+- Active (last): `text-neutral-primary-initial pointer-events-none`
+- Divider: `chevron-right` in `text-neutral-secondary-initial`
+- **Forbidden on first-level pages**. Required on second-level and deeper.
+
+### Sidebar Navigation
+
+- Width: 240px
+- Items: 44px height, icon (20px) + label (`label-m`), 16px left padding
+- Active: `bg-surface-action-secondary-pressed`, `text-action-primary-initial`, left accent border
+- Hover: `bg-surface-neutral-primary-hover`
+
+### Stepper (from `Stepper.theme.js`)
+
+Step icons use Lucide (NOT numbered circles):
+- COMPLETED: `check-circle-2` + `text-action-primary-initial`
+- CURRENT: `circle-dot` + `text-action-primary-initial`
+- INCOMPLETE: `circle` + `text-neutral-primary-initial`
+
+Progress bar below steps (`h-0.5 bg-surface-action-primary-initial`). No connector lines between steps.
 
 ### Badge
 
-Subtle role surface + role text, `--radius-default` (4px) — a rounded rect, **not** a pill. Use for counts; use StatusTag for status.
+- `rounded` (4px), **not a pill**
+- Subtle: `bg-surface-{variant}-secondary-initial text-{variant}-primary-initial`
 
-```css
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.125rem 0.625rem;
-  border-radius: var(--radius-default);
-  font-size: 0.75rem;        /* body-s */
-  font-weight: 500;
-}
-.badge-default { background: var(--surface-neutral-secondary-initial); color: var(--text-neutral-primary-initial); }
-.badge-info    { background: var(--surface-info-secondary-initial);    color: var(--text-info-primary-initial); }
-.badge-success { background: var(--surface-success-secondary-initial); color: var(--text-success-primary-initial); }
-.badge-warning { background: var(--surface-warning-secondary-initial); color: var(--text-warning-primary-initial); }
-.badge-critical{ background: var(--surface-critical-secondary-initial);color: var(--text-critical-primary-initial); }
-```
+### Chip (from `Chip.theme.js`)
 
-### Alert
+- `h-8 px-3 rounded-full bg-transparent border border-action-secondary-initial`
+- Selected: `border-2 border-action-primary-initial`
 
-A 4px left accent (not a full border) over a subtle role surface. Page-level persistent state only — transient confirmations use a Snackbar.
+### EmptyState (from `EmptyState.theme.js`)
 
-```css
-.alert {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  min-width: 280px;
-  padding: var(--space-3) var(--space-2);
-  border-left: 4px solid var(--border-info-primary-initial);
-  border-radius: var(--radius-lg);
-  background: var(--surface-info-secondary-initial);
-}
-.alert-icon  { width: 1.25rem; height: 1.25rem; flex-shrink: 0; color: var(--icon-info-primary-initial); }
-.alert-title { font-size: 0.875rem; font-weight: 600; color: var(--text-neutral-primary-initial); }
-.alert-body  { font-size: 0.875rem; color: var(--text-neutral-primary-initial); }
+- Uses real Paysera 120×120 PNGs: `nothing-found.png`, `something-wrong.png`, `restricted-access.png`, `internet-connection.png`
+- Description: `body-m text-neutral-primary-initial` (not muted!)
 
-.alert-success  { border-left-color: var(--border-success-primary-initial);  background: var(--surface-success-secondary-initial); }
-.alert-success .alert-icon { color: var(--icon-success-primary-initial); }
-.alert-warning  { border-left-color: var(--border-warning-primary-initial);  background: var(--surface-warning-secondary-initial); }
-.alert-warning .alert-icon { color: var(--icon-warning-primary-initial); }
-.alert-critical { border-left-color: var(--border-critical-primary-initial); background: var(--surface-critical-secondary-initial); }
-.alert-critical .alert-icon { color: var(--icon-critical-primary-initial); }
-```
+### Avatar
 
-### Chip (filter)
-
-Pill-shaped (`--radius-full`), transparent with a secondary border. Selected gets a 2px action-blue border (color change, not a fill).
-
-```css
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  height: 2rem;
-  padding-inline: var(--space-3);
-  border: 1px solid var(--border-action-secondary-initial);
-  border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--text-neutral-primary-initial);
-  font-size: 0.875rem;       /* label-m */
-  font-weight: 500;
-  cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
-}
-.chip:hover { background: var(--surface-action-secondary-hover); }
-.chip:focus-visible {
-  outline: 2px solid var(--focus-outline-neutral-primary-initial);
-  outline-offset: 1px;
-}
-.chip.is-selected { border-width: 2px; border-color: var(--border-action-primary-initial); }
-```
-
-### Table
-
-Header row sits on the secondary neutral surface with **dark** header text (not muted). Body rows are the primary surface with a hover and a blue-100 selected state.
-
-```css
-.table { width: 100%; border-collapse: collapse; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm); }
-.table thead th {
-  height: 3rem;
-  padding: 0.875rem var(--space-4);
-  text-align: left;
-  background: var(--surface-neutral-secondary-initial);
-  border-bottom: 1px solid var(--border-neutral-primary-initial);
-  font-size: 0.875rem;       /* label-m */
-  font-weight: 500;
-  color: var(--text-neutral-primary-initial);
-}
-.table tbody td {
-  height: 3rem;
-  padding: 0.875rem var(--space-4);
-  border-bottom: 1px solid var(--border-neutral-primary-initial);
-  background: var(--surface-neutral-primary-initial);
-  font-size: 0.875rem;       /* body-m */
-  color: var(--text-neutral-primary-initial);
-}
-.table tbody tr:hover td { background: var(--surface-action-secondary-hover); }
-.table tbody tr.is-selected td { background: var(--surface-action-secondary-pressed); }
-.table .cell-id { font-family: var(--font-mono); }  /* PT Mono for IDs / IBANs */
-```
-
-## 7. Motion & Interaction
-
-Motion is restrained and functional. Default easing is the Paysera ease-out `cubic-bezier(0.23, 1, 0.32, 1)`; enter ~200ms, exit ~140ms.
-
-| Interaction | Duration | Easing |
-|-------------|----------|--------|
-| Hover / state change | 100ms | ease-out |
-| Panel / accordion expand | 200ms | ease-out |
-| Modal / drawer enter | 200ms | ease-out |
-| Modal / drawer exit | 140ms | ease-out |
-| Progress / value transition | 300ms | ease-out |
-
-```css
-:root {
-  --transition-fast: 100ms cubic-bezier(0.23, 1, 0.32, 1);
-  --transition-base: 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  --transition-slow: 300ms cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .card-interactive { transition: none; }
-  .chip, .btn { transition: none; }
-  .accordion-collapsible-inner { animation: none; }
-}
-```
-
-## 8. Voice & Brand
+- Circular. Sizes: 32px (topbar), 40px (lists), 64px (profile).
+- Without photo: `bg-surface-action-primary-initial`, white initials in `label-m`.
 
 ### Iconography
 
-Lucide icons, pinned to a stable pre-1.0 release. Use the Icon component everywhere — never raw SVG. Match icon size to accompanying text (`sm` with `body-m`, `md` with `body-l`, `base` with titles). Pair every status with an icon so meaning survives color-blindness. No decorative icons in dense tables.
+- Lucide icons pinned to `@0.469.0`
+- Sizes: xs(12) / sm(14) / md(16) / base(20) / lg(24) / xl(32) / 2xl(40)
+- 43 approved icons mapped in `ICON-MAP.md`
+
+## 7. Motion & Interaction
+
+### Transitions
+
+- Duration: 0.15s–0.25s. Never longer than 0.3s for UI transitions.
+- Easing: `ease`. Never bounce, spring, or elastic.
+- Properties: `background-color`, `border-color`, `color`, `box-shadow`, `opacity`, `transform`.
+
+### Hover States
+
+- Buttons: darken background by one step (primary → `surface-action-primary-hover`)
+- Cards (clickable): add `shadow-sm` or `shadow-default`
+- Links: underline on hover
+- Table rows: `surface-action-secondary-hover`
+- Sidebar items: `surface-neutral-primary-hover`
+
+### Focus States
+
+- Keyboard focus: `outline-2 outline-offset-1` using `focus-outline-neutral-primary-initial` (blue-600)
+- Use `outline`, not `ring`
+- Use `focus-visible` to hide on mouse click only
+- Never remove focus outlines
+
+### Loading States
+
+- Skeleton: `surface-neutral-secondary-disabled` with subtle pulse animation (1.5s ease-in-out infinite)
+- Spinner: `w-5 h-5`, `text-action-primary-initial` color, `0.8s linear infinite` rotation
+- Spinner sizes: small (w-4 h-4) / medium (w-5 h-5) / large (w-6 h-6)
+- Button loading: spinner replaces label, button stays same width, disabled
+
+### Reduced Motion
+
+- Respect `prefers-reduced-motion: reduce`. Disable all animations except opacity fade.
+- Skeleton pulse: replace with static fill.
+
+## 8. Voice & Brand
+
+### Copy Style
+
+- You-voice. "You" for the user, "we" sparingly.
+  - "We'll send tickets to this email"
+  - "Please verify your identity to continue"
+
+### Capitalization
+
+- **Title Case** for: headings, button labels, nav items, tab labels, card titles, page titles, form-field labels.
+  - Capitalize all main words; lowercase articles/conjunctions/prepositions of 3 letters or fewer.
+  - Examples: "Active Loans", "Bank Cards", "Create New Project", "Pay 557.00 €"
+- **Sentence case** for: body copy, helper text, descriptions, error messages.
+- **ALL CAPS**: only for `label-s` metadata eyebrows. Never for buttons, headings, or nav.
+
+### Labels & Buttons
+
+- Labels are nouns: Email, First Name, Country.
+- Required fields use `*`.
+- Buttons are verbs naming the consequence: "Continue", "Pay 557.00 €", "Delete Account".
+- Never "Submit", never "OK".
 
 ### Tone
 
-- **Trustworthy and plain.** Verb-first, sentence-case button labels of 1–3 words ("View invoice", not "Click here").
-- **Localization-aware.** Paysera ships in 30+ European languages; reserve horizontal space per locale and prefer rewriting copy over shrinking a component.
-- **Status vocabulary is centralized.** Keep one status dictionary across the product; never invent ad-hoc status strings.
+- Helper text is factual, not aspirational. "Only 3 tickets remaining", not "Hurry, selling fast!"
+- Errors are specific and remedial: "Your card was declined. Please check your details and try again."
+- No exclamation marks in product UI (rare success toast exception: "Payment sent!").
+- No emoji anywhere in product copy.
 
-### Brand Discipline
+### Formatting
 
-The Paysera brand blue `#000099` appears on the logotype and hero moments only. It is never a button background, link color, or surface fill. Sub-brands (Paysera POS, Paysera Tickets) swap the logo only and inherit every color, type, and component token from Paysera Main.
+- **Currency**: number before symbol, thin-space thousands separator, always 2 decimals. `129.00 €`, `1 200.50 €`. Never `€129` or `$1,200`.
+- **Dates**: ISO in tables/metadata (`2026-04-22`); human in narrative (`22 Apr 2026`).
+- **IBAN**: PT Mono font, grouped in 4-digit blocks: `LT12 3456 7890 1234 5678`.
+
+### Sub-brands
+
+Two named sub-brands — **Paysera POS** and **Paysera Tickets** — swap the logo only. All other tokens inherit from Paysera Main. See `context/github/sub-brands.md`.
 
 ## 9. Anti-patterns
 
-- Do not use raw hex in components — always reference a semantic token (`--surface-action-primary-initial`), so dark mode stays correct.
-- Do not mix Paysera brand blue (`#000099`) with action blue (`#0f62fe`) — brand blue is for marks and hero moments only, never controls.
-- Do not use glassmorphism, neumorphism, or faux-3D — Paysera is regulated fintech, not web3.
-- Do not use gradients as a primary surface color — gradients are allowed only in hero sections and chart fills, subtle and single-hue.
-- Do not stack two primary buttons — one becomes `secondary`; one primary action per view.
-- Do not use success green (`#16a34a`) decoratively — reserve it strictly for "succeeded" states.
-- Do not stack two shadow tiers on one surface — pick a single elevation level per card.
-- Do not use border-radius above 12px on cards or above 4px on buttons/inputs/badges — only chips and pills use `--radius-full`.
-- Do not use a bare `<input>` — always wrap in the bordered label-on-top `<label>` composition so border, focus outline, and label sit together.
-- Do not use placeholder text as a field label — it is an accessibility and i18n failure.
-- Do not use Badge for status — use StatusTag, which is semantically clearer and pairs an icon with the meaning.
-- Do not invent new component primitives — compose from existing ones and flag the gap.
+### Forbidden Colors
+
+- No generic Tailwind palette (`bg-blue-500`, `text-gray-600`). Only semantic Paysera tokens.
+- No hardcoded hex in inline styles, no `bg-[#...]` arbitrary Tailwind values.
+- No warm beige / cream / peach / pink / orange-brown backgrounds.
+- Don't mix brand navy (`#000099`) with action blue (`#0f62fe`) — brand navy is for marks and hero moments only.
+- Don't use success green as decorative — strictly for "succeeded" states.
+
+### Forbidden Typography
+
+- No `text-sm` / `text-xl` / `font-bold` / `font-semibold` for semantic content — use the token scale.
+- No `clamp()` fluid typography — choose a smaller style at smaller breakpoints instead.
+
+### Forbidden Patterns
+
+- No glassmorphism, neumorphism, faux-3D.
+- No gradients as primary surface colour (only in hero sections and chart fills, subtle, single-hue).
+- No `backdrop-blur` on sticky headers. Solid surface background with `border-b`.
+- No bounce / spring easing. `0.15–0.25s ease` only.
+- No photography or patterns as page/card/hero backgrounds. Solid surface colors only.
+- No custom or simplified Paysera logos.
+- No illustrations beyond supplied empty-state assets.
+- No emoji in product UI copy.
+- No breadcrumbs on first-level sidebar pages.
+- Don't stack two primary buttons side-by-side.
+- Don't stack `shadow-md` on a card inside an already-raised parent.
+
+### Forbidden Component Shapes
+
+- Secondary button is NOT blue-outlined. It is `surface-action-tertiary-initial` (slate-950) filled with white label.
+- Critical button is NOT red-filled. It is transparent with red border and red text.
+- Switch OFF is NOT light gray. It is `surface-action-tertiary-initial` (slate-950) with white handle.
+- Pagination active page is NOT filled blue with white text. It is `surface-action-secondary-pressed` (blue-100) with dark text.
+- StatusTag has NO pill background. It is colored icon + dark label only.
+- Snackbar is NOT fully filled. It is alert-style: white bg + left border accent + colored icon.
+- Tooltip is NOT medium gray. It is `surface-action-tertiary-initial` (slate-950) bg with white label.
+- Table header text is NOT muted. It is `text-neutral-primary-initial` (dark).
+- EmptyState description is NOT muted. It is `text-neutral-primary-initial`.
+- Stepper uses Lucide icons (check-circle-2, circle-dot, circle), NOT numbered circles.
+
+### 10 Mandatory Generation Rules (from `STACK.md`)
+
+1. One `.html` file. No `import`, no relative paths, no multi-file layouts.
+2. Tailwind only via CDN. Custom classes in `<style type="text/tailwindcss">`.
+3. Semantic Paysera token classes, not hex and not raw Tailwind palette.
+4. Typography via display/headline/title/body/label/code classes, not `text-xl`/`font-bold`.
+5. Dark mode via `[data-theme="dark"]`, not `.dark` / `dark:`.
+6. Lucide for icons. `<i data-lucide="name" class="w-4 h-4"></i>` + `lucide.createIcons()`.
+7. Button variants strictly from the API: primary / secondary / tertiary / ghost / critical / text.
+8. Currency: `1 250.00 €` — number before symbol, thin space, 2 decimals.
+9. No emoji in product UI. Icon = Lucide.
+10. Title Case for headings, buttons, nav, tabs, card titles, page titles, form labels.
