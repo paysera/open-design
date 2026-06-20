@@ -59,6 +59,16 @@ services:
       # billing/audit. The token is a litellm virtual key from app.env.
       ANTHROPIC_BASE_URL: ${anthropic_base_url}
       ANTHROPIC_AUTH_TOKEN: $${ANTHROPIC_AUTH_TOKEN}
+      # Pin Claude Code to model names the Paysera litellm gateway actually
+      # serves to Vertex. Claude Code's built-in default (claude-opus-4-8) and
+      # several other bare names are NOT routed by this gateway; only
+      # claude-opus-4-6 and claude-haiku-4-5 resolve. These envs override every
+      # Claude Code model tier so "default" runs work without a per-user pick.
+      ANTHROPIC_MODEL: claude-opus-4-6
+      ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4-6
+      ANTHROPIC_DEFAULT_SONNET_MODEL: claude-opus-4-6
+      ANTHROPIC_DEFAULT_HAIKU_MODEL: claude-haiku-4-5
+      ANTHROPIC_SMALL_FAST_MODEL: claude-haiku-4-5
     volumes:
       # Persistent daemon data on the dedicated disk. The host dir is chowned to
       # uid 1001 by the startup script so the container's open-design user writes.
