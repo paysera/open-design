@@ -3,6 +3,7 @@ import net from 'node:net';
 import type { Express, Request, RequestHandler, Response } from 'express';
 
 import { checkConnectorAccess, type ToolTokenGrant } from '../tool-tokens.js';
+import { isApiAuthDisabled } from '../api-token-auth.js';
 import { validateBoundedJsonObject } from '../live-artifacts/schema.js';
 import { executeConnectorTool, listConnectorTools } from '../tools/connectors.js';
 import { readComposioConfig, readPublicComposioConfig, writeComposioConfig } from './composio-config.js';
@@ -527,7 +528,14 @@ function renderConnectorConnectedHtml(connectorId: string): string {
 
 export function registerConnectorRoutes(app: Express, options: RegisterConnectorRoutesOptions): void {
   const service = options.service ?? connectorService;
-  const requireLocalDaemonRequest: RequestHandler = options.requireLocalDaemonRequest ?? ((_req, _res, next) => next());
+  // Connector setup endpoints are loopback-only by default (desktop app). Behind
+  // a trusted reverse proxy (OD_DISABLE_API_AUTH=1) the daemon never sees a
+  // loopback peer/host/origin, so they would 403 — blocking the Integrations tab
+  // and connector-backed live-artifact refresh sources. Relax under the trusted
+  // proxy; otherwise keep the strict loopback guard.
+  const requireLocalDaemonRequest: RequestHandler = isApiAuthDisabled()
+    ? ((_req, _res, next) => next())
+    : (options.requireLocalDaemonRequest ?? ((_req, _res, next) => next()));
 
   app.get('/api/connectors', async (_req: Request, res: Response) => {
     try {
