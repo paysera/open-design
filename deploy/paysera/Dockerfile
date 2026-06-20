@@ -81,6 +81,17 @@ RUN printf '#!/bin/sh\n[ "$1" = "get" ] || exit 0\necho username=x-access-token\
 # the runtime user.
 RUN mkdir -p /home/open-design && chown open-design:open-design /home/open-design
 
+# Codex CLI (OpenAI), wired to the Paysera litellm gateway's OpenAI-compatible
+# endpoint. A custom model provider with wire_api="chat" is required because
+# litellm serves /v1/chat/completions (not the Responses API codex defaults to).
+# The API key is injected at runtime via OPENAI_API_KEY (env_key below); no
+# secret is baked into the image.
+ARG CODEX_VERSION=latest
+RUN npm install -g @openai/codex@${CODEX_VERSION} && npm cache clean --force && codex --version | head -1
+RUN mkdir -p /home/open-design/.codex && \
+    printf 'model = "gpt-5.5"\nmodel_provider = "paysera-gateway"\n\n[model_providers.paysera-gateway]\nname = "Paysera litellm gateway"\nbase_url = "https://litellm-proxy-3qgmggattq-ew.a.run.app/v1"\nenv_key = "OPENAI_API_KEY"\nwire_api = "chat"\n' > /home/open-design/.codex/config.toml && \
+    chown -R open-design:open-design /home/open-design/.codex
+
 COPY --chown=open-design:open-design design-systems/paysera /app/design-systems/paysera
 
 # ---------------------------------------------------------------------------

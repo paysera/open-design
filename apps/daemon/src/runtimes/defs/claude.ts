@@ -3,14 +3,15 @@ import { DEFAULT_MODEL_OPTION } from './shared.js';
 import { loadMmdRouteModels } from '../mmd-routes.js';
 import type { RuntimeAgentDef } from '../types.js';
 
+// Paysera deployment: curate the picker to only the latest models the gateway
+// actually serves to Vertex. Bare names (claude-opus-4-8) and the sonnet/opus/
+// haiku aliases hit a disabled direct-Anthropic route on our gateway, so they
+// are intentionally omitted; only the vertex_ai/ prefixed ids resolve.
 const CLAUDE_FALLBACK_MODELS = [
   DEFAULT_MODEL_OPTION,
-  { id: 'sonnet', label: 'Sonnet (alias)' },
-  { id: 'opus', label: 'Opus (alias)' },
-  { id: 'haiku', label: 'Haiku (alias)' },
-  { id: 'claude-opus-4-5', label: 'claude-opus-4-5' },
-  { id: 'claude-sonnet-4-5', label: 'claude-sonnet-4-5' },
-  { id: 'claude-haiku-4-5', label: 'claude-haiku-4-5' },
+  { id: 'vertex_ai/claude-opus-4-8', label: 'Claude Opus 4.8' },
+  { id: 'vertex_ai/claude-sonnet-4-6', label: 'Claude Sonnet 4.6' },
+  { id: 'vertex_ai/claude-haiku-4-5', label: 'Claude Haiku 4.5' },
 ];
 
 export const claudeAgentDef = {
