@@ -8,14 +8,10 @@ export const geminiAgentDef = {
     versionArgs: ['--version'],
     fallbackModels: [
       DEFAULT_MODEL_OPTION,
-      // Gemini 3 (May 2026): top-tier reasoning + fast frontier-class.
-      // Both currently ship as previews via the Gemini CLI. Issue #981.
-      { id: 'gemini-3-pro-preview', label: 'gemini-3-pro-preview' },
-      { id: 'gemini-3-flash-preview', label: 'gemini-3-flash-preview' },
-      { id: 'gemini-2.5-pro', label: 'gemini-2.5-pro' },
-      { id: 'gemini-2.5-flash', label: 'gemini-2.5-flash' },
-      // Cheapest 2.5 multimodal variant; useful for high-volume / low-latency work.
-      { id: 'gemini-2.5-flash-lite', label: 'gemini-2.5-flash-lite' },
+      // Paysera: curated to the latest models the AI Studio key serves
+      // (verified live: both return completions via the Gemini API).
+      { id: 'gemini-3.1-pro-preview', label: 'Gemini 3.1 Pro' },
+      { id: 'gemini-3.5-flash', label: 'Gemini 3.5 Flash' },
     ],
     // Gemini reads from stdin when `-p` is omitted and stdin is a pipe.
     // Passing the full composed prompt as a CLI arg causes ENAMETOOLONG on
